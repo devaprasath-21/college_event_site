@@ -1705,7 +1705,11 @@ export const AdminDashboard: React.FC = () => {
                            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
                              <Award className="w-5 h-5 text-amber-500" /> Certificates Manager
                            </h3>
-                           <p className="text-xs text-muted-foreground mt-1">{eventRegs.length} registered · {attendedRegs.length} attended</p>
+                           <p className="text-xs text-muted-foreground mt-1.5 flex flex-wrap gap-2 items-center">
+                             <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">{eventRegs.length} Booked</span>
+                             <span className="bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full font-medium">{attendedRegs.length} Attended</span>
+                             <span className="bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full font-medium">{certifiedCount} Issued</span>
+                           </p>
                         </div>
                         <button
                           onClick={() => {
@@ -1750,7 +1754,7 @@ export const AdminDashboard: React.FC = () => {
                                             {(s?.username || 'S').charAt(0).toUpperCase()}
                                           </div>
                                           <div className="flex-1 min-w-0">
-                                            <p className="font-bold text-foreground text-sm truncate">{s?.username || '—'}</p>
+                                            <p className="font-bold text-foreground text-sm truncate">{s?.name || s?.username || '—'}</p>
                                             <p className="text-xs text-muted-foreground truncate">{s?.email || '—'}</p>
                                           </div>
                                         </div>
