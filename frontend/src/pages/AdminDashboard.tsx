@@ -435,10 +435,10 @@ export const AdminDashboard: React.FC = () => {
     setEventLevel(event.difficultyLevel);
     setEventPrize(event.prizeDetails);
     setEventRules(event.rules.join('\n'));
-    setCoordinatorName(event.facultyCoordinator?.username);
+    setCoordinatorName(event.facultyCoordinator?.name || event.facultyCoordinator?.username);
     setCoordinatorEmail(event.facultyCoordinator?.email);
     setCoordinatorPhone(event.facultyCoordinator?.phone);
-    setStudentCoordinatorName(event.studentCoordinator?.username);
+    setStudentCoordinatorName(event.studentCoordinator?.name || event.studentCoordinator?.username);
     setStudentCoordinatorEmail(event.studentCoordinator?.email);
     setStudentCoordinatorPhone(event.studentCoordinator?.phone);
     setEventRegistrationOpen(event.isRegistrationOpen !== false);
@@ -479,8 +479,8 @@ export const AdminDashboard: React.FC = () => {
       prizeDetails: eventPrize,
       rules: eventRules.split('\n').filter(r => r.trim() !== ''),
       requirements: ['Bring college ID card.'],
-      facultyCoordinator: { username: coordinatorName, email: coordinatorEmail, phone: coordinatorPhone },
-      studentCoordinator: { username: studentCoordinatorName, email: studentCoordinatorEmail, phone: studentCoordinatorPhone },
+      facultyCoordinator: { name: coordinatorName, email: coordinatorEmail, phone: coordinatorPhone },
+      studentCoordinator: { name: studentCoordinatorName, email: studentCoordinatorEmail, phone: studentCoordinatorPhone },
       isPublished: true, // Auto-publish for dashboard simplicity
       isRegistrationOpen: eventRegistrationOpen
     });
