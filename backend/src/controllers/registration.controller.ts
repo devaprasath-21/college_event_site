@@ -230,7 +230,7 @@ export const getRegistrations = async (req: AuthRequest, res: Response) => {
 // @route   POST /api/registrations/scan
 // @access  Private (Admin / Coordinator)
 export const scanAttendance = async (req: AuthRequest, res: Response) => {
-  const { registrationId } = req.body;
+  const { registrationId, eventId } = req.body;
 
   if (!registrationId) {
     return res.status(400).json({ success: false, message: 'Registration Pass ID, Name, or Reg No is required' });
@@ -254,11 +254,16 @@ export const scanAttendance = async (req: AuthRequest, res: Response) => {
         });
 
         if (students.length > 0) {
-          registration = await Registration.findOne({
+          const regQuery: any = {
             studentId: { $in: students.map(s => s._id) },
             status: 'Approved',
             attended: false
-          }).sort({ createdAt: -1 });
+          };
+          if (eventId) {
+            regQuery.eventId = eventId;
+          }
+          
+          registration = await Registration.findOne(regQuery).sort({ createdAt: -1 });
         }
       }
 
@@ -282,7 +287,8 @@ export const scanAttendance = async (req: AuthRequest, res: Response) => {
           const regs = MockDB.getRegistrations().filter(r => 
             studentIds.includes(r.studentId) && 
             r.status === 'Approved' && 
-            r.attended === false
+            r.attended === false &&
+            (eventId ? r.eventId === eventId : true)
           );
           if (regs.length > 0) {
             regs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

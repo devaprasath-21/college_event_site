@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
@@ -34,6 +34,8 @@ export const AdminDashboard: React.FC = () => {
   const [scanResult, setScanResult] = useState<any | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
   const [scanLoading, setScanLoading] = useState(false);
+  const [scannerEventId, setScannerEventId] = useState('');
+  const [showScannerAutocomplete, setShowScannerAutocomplete] = useState(false);
 
   // Winner Announcement State
   const [winner1st, setWinner1st] = useState({ username: '', regNo: '', year: '' });
@@ -109,6 +111,17 @@ export const AdminDashboard: React.FC = () => {
       const res = await api.get(`/registrations?status=${statusFilter}&search=${searchQuery}`);
       return res.data.data;
     }
+  });
+
+  // Fetch registrations for scanner autocomplete
+  const { data: scannerRegistrations } = useQuery({
+    queryKey: ['scanner-registrations', scannerEventId],
+    queryFn: async () => {
+      if (!scannerEventId) return [];
+      const res = await api.get(`/registrations?eventId=${scannerEventId}&status=Approved`);
+      return res.data.data;
+    },
+    enabled: !!scannerEventId
   });
 
   // Fetch All Registered Members
@@ -400,6 +413,20 @@ export const AdminDashboard: React.FC = () => {
     }
   });
 
+  const filteredScannerStudents = useMemo(() => {
+    if (!scannerEventId || !scanCode || scanCode.length < 2) return [];
+    const query = scanCode.toLowerCase();
+    return scannerRegistrations?.filter((r: any) => 
+      !r.attended &&
+      (
+        r.studentId?.name?.toLowerCase().includes(query) ||
+        r.studentId?.username?.toLowerCase().includes(query) ||
+        r.studentId?.registrationNumber?.toLowerCase().includes(query) ||
+        r.registrationId.toLowerCase().includes(query)
+      )
+    ) || [];
+  }, [scanCode, scannerEventId, scannerRegistrations]);
+
   // Execute QR Scan Check-In
   const triggerCheckInScan = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -409,7 +436,10 @@ export const AdminDashboard: React.FC = () => {
     setScanError(null);
     
     try {
-      const res = await api.post('/registrations/scan', { registrationId: scanCode });
+      const res = await api.post('/registrations/scan', { 
+        registrationId: scanCode,
+        eventId: scannerEventId || undefined 
+      });
       if (res.data.success) {
         setScanResult(res.data);
         confetti({ particleCount: 80, spread: 60, colors: ['#6366f1', '#06b6d4'] });
@@ -1103,6 +1133,20 @@ export const AdminDashboard: React.FC = () => {
 
                   <form onSubmit={triggerCheckInScan} className="space-y-4 max-w-xs mx-auto">
                     <div className="space-y-1 text-left">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Select Event</label>
+                      <select
+                        value={scannerEventId}
+                        onChange={(e) => setScannerEventId(e.target.value)}
+                        className="w-full bg-background border border-muted px-3 py-2 text-xs rounded-xl text-foreground outline-none focus:border-primary cursor-pointer"
+                      >
+                        <option value="">-- All Events --</option>
+                        {adminEvents?.map((event: any) => (
+                          <option key={event._id} value={event._id}>{event.title}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-1 text-left relative">
                       <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Registration Code, Name, or Reg No</label>
                       <div className="relative">
                         <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-muted-foreground">
@@ -1112,11 +1156,31 @@ export const AdminDashboard: React.FC = () => {
                           type="text"
                           value={scanCode}
                           onChange={(e) => setScanCode(e.target.value)}
+                          onFocus={() => setShowScannerAutocomplete(true)}
+                          onBlur={() => setTimeout(() => setShowScannerAutocomplete(false), 200)}
                           required
                           placeholder="e.g. John Doe, 21IT001, CH-XXXX"
                           className="w-full bg-background border border-muted pl-9 pr-3 py-2 text-xs rounded-xl text-foreground outline-none focus:border-primary uppercase font-mono font-bold"
                         />
                       </div>
+                      
+                      {showScannerAutocomplete && filteredScannerStudents.length > 0 && (
+                        <ul className="absolute z-10 w-full mt-1 bg-card border border-muted rounded-xl shadow-2xl max-h-48 overflow-y-auto">
+                          {filteredScannerStudents.map((r: any) => (
+                            <li 
+                              key={r._id} 
+                              className="px-3 py-2 hover:bg-muted/50 cursor-pointer text-left border-b border-border/50 last:border-0"
+                              onMouseDown={() => {
+                                setScanCode(r.registrationId);
+                                setShowScannerAutocomplete(false);
+                              }}
+                            >
+                              <div className="text-xs font-bold text-foreground">{r.studentId?.name || r.studentId?.username}</div>
+                              <div className="text-[10px] text-muted-foreground">{r.studentId?.registrationNumber} | Pass: <span className="font-mono">{r.registrationId}</span></div>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                     
                     <button
