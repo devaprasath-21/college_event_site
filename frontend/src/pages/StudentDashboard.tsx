@@ -345,7 +345,7 @@ export const StudentDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Upper floating navigation */}
-      <header className="h-16 border-b border-border/50 bg-background/50 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40">
+      <header className="h-16 border-b border-border/50 shadow-sm bg-background/95 backdrop-blur-md px-4 md:px-6 flex items-center justify-between sticky top-0 z-40">
         <div 
           onClick={() => navigate('/')}
           className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"

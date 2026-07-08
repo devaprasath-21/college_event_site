@@ -505,7 +505,7 @@ export const AdminDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header bar */}
-      <header className="print:hidden h-16 border-b border-white/5 bg-background/50 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40">
+      <header className="print:hidden h-16 border-b border-border/50 shadow-sm bg-background/95 backdrop-blur-md px-4 md:px-6 flex items-center justify-between sticky top-0 z-40">
         <div 
           onClick={() => navigate('/')}
           className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
@@ -627,9 +627,9 @@ export const AdminDashboard: React.FC = () => {
                   </div>
 
                   {/* Recharts Analytics graphs */}
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 gap-6">
                     {/* Registration Trend Area Chart */}
-                    <div className="lg:col-span-2 border border-white/5 bg-white/[0.01] rounded-2xl p-6">
+                    <div className="border border-white/5 bg-white/[0.01] rounded-2xl p-6">
                       <h3 className="text-xs font-bold uppercase tracking-wider mb-4">Registration Velocity Trend</h3>
                       <div className="h-60">
                         {stats.registrationTrend?.length === 0 ? (
@@ -650,47 +650,6 @@ export const AdminDashboard: React.FC = () => {
                             </AreaChart>
                           </ResponsiveContainer>
                         )}
-                      </div>
-                    </div>
-
-                    {/* Department breakdown pie chart */}
-                    <div className="border border-white/5 bg-white/[0.01] rounded-2xl p-6 flex flex-col justify-between">
-                      <h3 className="text-xs font-bold uppercase tracking-wider">Department Engagement</h3>
-                      <div className="h-44 flex items-center justify-center">
-                        {stats.departmentStats?.length === 0 ? (
-                          <span className="text-xs text-muted-foreground">No students logged.</span>
-                        ) : (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                              <Pie
-                                data={stats.departmentStats}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={40}
-                                outerRadius={60}
-                                paddingAngle={5}
-                                dataKey="value"
-                              >
-                                {stats.departmentStats.map((entry: any, index: number) => (
-                                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                              </Pie>
-                              <Tooltip contentStyle={{ background: '#111827', borderColor: '#374151', fontSize: 11 }} />
-                            </PieChart>
-                          </ResponsiveContainer>
-                        )}
-                      </div>
-                      
-                      <div className="space-y-1.5 mt-4 text-[10px]">
-                        {stats.departmentStats.map((d: any, idx: number) => (
-                          <div key={idx} className="flex justify-between items-center text-muted-foreground">
-                            <span className="flex items-center gap-1.5">
-                              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
-                                 {d.name}
-                            </span>
-                            <span className="font-bold text-foreground">{d.value} Students</span>
-                          </div>
-                        ))}
                       </div>
                     </div>
                   </div>
@@ -1843,7 +1802,7 @@ export const AdminDashboard: React.FC = () => {
                     </button>
 
                     {/* Additional Management Actions (Mobile-Optimized) */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6 w-full">
+                    <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 w-full">
                       {(user?.role === 'super-admin' || user?.role === 'event-coordinator') && (
                         <button
                           onClick={() => { setActiveTab('announcements'); window.scrollTo(0, 0); }}
