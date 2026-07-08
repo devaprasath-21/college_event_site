@@ -555,37 +555,52 @@ export const StudentDashboard: React.FC = () => {
               )}
 
               {/* Profile stats cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <SpotlightCard className="p-4 md:p-6 glassmorphism-card flex items-center justify-between" glowColor="rgba(20, 184, 166, 0.12)">
-                  <div>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Participation Points</span>
-                    <h3 className="text-3xl font-display font-black text-foreground mt-1">{user?.participationPoints} XP</h3>
-                    <p className="text-[10px] text-muted-foreground mt-1">Attend events to accumulate points</p>
+              <div className="grid grid-cols-3 gap-2 md:gap-6">
+                <SpotlightCard className="p-3 md:p-6 glassmorphism-card flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-0 text-center md:text-left" glowColor="rgba(20, 184, 166, 0.12)">
+                  <div className="order-1 md:order-2 p-2 md:p-3.5 bg-primary/10 rounded-xl md:rounded-2xl border border-primary/20">
+                    <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-primary" />
                   </div>
-                  <div className="p-3.5 bg-primary/10 rounded-2xl border border-primary/20">
-                    <Sparkles className="w-6 h-6 text-primary" />
-                  </div>
-                </SpotlightCard>
-
-                <SpotlightCard className="p-4 md:p-6 glassmorphism-card flex items-center justify-between" glowColor="rgba(99, 102, 241, 0.12)">
-                  <div>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Attendance Streak</span>
-                    <h3 className="text-3xl font-display font-black text-foreground mt-1">{user?.streak} Events</h3>
-                    <p className="text-[10px] text-muted-foreground mt-1">Continuous event check-ins</p>
-                  </div>
-                  <div className="p-3.5 bg-secondary/10 rounded-2xl border border-secondary/20">
-                    <Flame className="w-6 h-6 text-secondary" />
+                  <div className="order-2 md:order-1 flex flex-col items-center md:items-start">
+                    <span className="text-[8px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+                      <span className="md:hidden">Points</span>
+                      <span className="hidden md:inline">Participation Points</span>
+                    </span>
+                    <h3 className="text-sm md:text-3xl font-display font-black text-foreground mt-1">
+                      {user?.participationPoints} <span className="md:hidden text-[8px]">XP</span><span className="hidden md:inline text-xl">XP</span>
+                    </h3>
+                    <p className="hidden md:block text-[10px] text-muted-foreground mt-1">Attend events to accumulate points</p>
                   </div>
                 </SpotlightCard>
 
-                <SpotlightCard className="p-4 md:p-6 glassmorphism-card flex items-center justify-between" glowColor="rgba(16, 185, 129, 0.12)">
-                  <div>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Earned Badges</span>
-                    <h3 className="text-3xl font-display font-black text-foreground mt-1">{(user?.badges || []).length} Badges</h3>
-                    <p className="text-[10px] text-muted-foreground mt-1">Achievements unlocked</p>
+                <SpotlightCard className="p-3 md:p-6 glassmorphism-card flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-0 text-center md:text-left" glowColor="rgba(99, 102, 241, 0.12)">
+                  <div className="order-1 md:order-2 p-2 md:p-3.5 bg-secondary/10 rounded-xl md:rounded-2xl border border-secondary/20">
+                    <Flame className="w-4 h-4 md:w-6 md:h-6 text-secondary" />
                   </div>
-                  <div className="p-3.5 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
-                    <Award className="w-6 h-6 text-emerald-400" />
+                  <div className="order-2 md:order-1 flex flex-col items-center md:items-start">
+                    <span className="text-[8px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+                      <span className="md:hidden">Streak</span>
+                      <span className="hidden md:inline">Attendance Streak</span>
+                    </span>
+                    <h3 className="text-sm md:text-3xl font-display font-black text-foreground mt-1">
+                      {user?.streak} <span className="hidden md:inline text-xl">Events</span>
+                    </h3>
+                    <p className="hidden md:block text-[10px] text-muted-foreground mt-1">Continuous event check-ins</p>
+                  </div>
+                </SpotlightCard>
+
+                <SpotlightCard className="p-3 md:p-6 glassmorphism-card flex flex-col md:flex-row items-center md:justify-between gap-1 md:gap-0 text-center md:text-left" glowColor="rgba(16, 185, 129, 0.12)">
+                  <div className="order-1 md:order-2 p-2 md:p-3.5 bg-emerald-500/10 rounded-xl md:rounded-2xl border border-emerald-500/20">
+                    <Award className="w-4 h-4 md:w-6 md:h-6 text-emerald-400" />
+                  </div>
+                  <div className="order-2 md:order-1 flex flex-col items-center md:items-start">
+                    <span className="text-[8px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+                      <span className="md:hidden">Badges</span>
+                      <span className="hidden md:inline">Earned Badges</span>
+                    </span>
+                    <h3 className="text-sm md:text-3xl font-display font-black text-foreground mt-1">
+                      {(user?.badges || []).length} <span className="hidden md:inline text-xl">Badges</span>
+                    </h3>
+                    <p className="hidden md:block text-[10px] text-muted-foreground mt-1">Achievements unlocked</p>
                   </div>
                 </SpotlightCard>
               </div>
