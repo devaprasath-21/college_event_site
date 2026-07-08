@@ -8,8 +8,8 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const wipeAndSeed = async () => {
   try {
-    let mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/campushub';
-    mongoUri = mongoUri.replace('localhost', '127.0.0.1');
+    const MONGO_URI = process.env.MONGO_URI || 'mongodb://devprasath1708_db_user:vnK6BPMQ2RblEbXC@ac-kxvjase-shard-00-00.jauslom.mongodb.net:27017,ac-kxvjase-shard-00-01.jauslom.mongodb.net:27017,ac-kxvjase-shard-00-02.jauslom.mongodb.net:27017/campushub?ssl=true&replicaSet=atlas-13pxtm-shard-0&authSource=admin&retryWrites=true&w=majority';
+    let mongoUri = MONGO_URI.replace('localhost', '127.0.0.1');
     console.log(`Connecting to database: ${mongoUri}`);
     await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB.');

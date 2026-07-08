@@ -9,7 +9,7 @@ export const LoginPage: React.FC = () => {
   const { login, register, completeProfile, user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const [activeTab, setActiveTab] = useState<'login' | 'register' | 'forgot'>('login');
   
   // Login Fields
   const [loginEmail, setLoginEmail] = useState('');
@@ -22,6 +22,13 @@ export const LoginPage: React.FC = () => {
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+
+  // Forgot Password Fields
+  const [forgotUsername, setForgotUsername] = useState('');
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotNewPassword, setForgotNewPassword] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(null);
 
   // Profile completion modal / sub-view
   const [showCompletionForm, setShowCompletionForm] = useState(false);
@@ -102,6 +109,41 @@ export const LoginPage: React.FC = () => {
     }
   };
 
+  const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotUsername || !forgotEmail || !forgotNewPassword) {
+      setError('Please enter all details to reset your password');
+      return;
+    }
+    setError(null);
+    setResetSuccessMessage(null);
+    setLoading(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: forgotUsername,
+          email: forgotEmail,
+          newPassword: forgotNewPassword
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Failed to reset password');
+      
+      setResetSuccessMessage('Password reset successfully! You can now login.');
+      setForgotUsername('');
+      setForgotEmail('');
+      setForgotNewPassword('');
+      setTimeout(() => setActiveTab('login'), 3000);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-background">
       {/* Dynamic Background Gradients */}
@@ -127,6 +169,7 @@ export const LoginPage: React.FC = () => {
               )}
 
               {/* Toggle Switch Tabs */}
+              {activeTab !== 'forgot' && (
               <div className="grid grid-cols-2 p-1 bg-muted rounded-xl mb-6">
                 <button
                   type="button"
@@ -143,6 +186,16 @@ export const LoginPage: React.FC = () => {
                   Register
                 </button>
               </div>
+              )}
+
+              {/* Success Message for Reset */}
+              {resetSuccessMessage && (
+                <div className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl flex items-center text-xs text-green-500">
+                  <UserCheck className="w-4 h-4 mr-2 flex-shrink-0" />
+                  <span>{resetSuccessMessage}</span>
+                </div>
+              )}
+
 
               {activeTab === 'login' ? (
                 <form onSubmit={handleLoginSubmit} className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -161,7 +214,7 @@ export const LoginPage: React.FC = () => {
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center">
                       <label className="text-sm font-semibold text-foreground">Password</label>
-                      <a href="#" className="text-xs text-primary hover:underline font-semibold">Forgot password?</a>
+                      <button type="button" onClick={() => { setActiveTab('forgot'); setError(null); setResetSuccessMessage(null); }} className="text-xs text-primary hover:underline font-semibold">Forgot password?</button>
                     </div>
                     <div className="relative">
                       <input
@@ -200,7 +253,7 @@ export const LoginPage: React.FC = () => {
                     </span>
                   </div>
                 </form>
-              ) : (
+              ) : activeTab === 'register' ? (
                 <form onSubmit={handleRegisterSubmit} className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="space-y-1.5">
                     <label className="text-sm font-semibold text-foreground">Username</label>
@@ -263,6 +316,58 @@ export const LoginPage: React.FC = () => {
                         Sign In
                       </button>
                     </span>
+                  </div>
+                </form>
+              ) : (
+                <form onSubmit={handleForgotPasswordSubmit} className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-foreground">Username</label>
+                    <input
+                      type="text"
+                      value={forgotUsername}
+                      onChange={(e) => setForgotUsername(e.target.value)}
+                      required
+                      className="w-full bg-background border border-muted focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 text-sm text-foreground transition-all outline-none"
+                      placeholder="Your username"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-foreground">Email</label>
+                    <input
+                      type="email"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      required
+                      className="w-full bg-background border border-muted focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 text-sm text-foreground transition-all outline-none"
+                      placeholder="Your registered email"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-foreground">New Password</label>
+                    <input
+                      type="password"
+                      value={forgotNewPassword}
+                      onChange={(e) => setForgotNewPassword(e.target.value)}
+                      required
+                      className="w-full bg-background border border-muted focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-2.5 text-sm text-foreground transition-all outline-none"
+                      placeholder="Enter new password"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-xl transition-all shadow-md clickable disabled:opacity-50 mt-2 flex justify-center items-center gap-2"
+                  >
+                    {loading ? 'Resetting...' : 'Reset Password'}
+                  </button>
+
+                  <div className="text-center pt-2">
+                    <button type="button" onClick={() => setActiveTab('login')} className="text-xs text-muted-foreground hover:text-primary transition-colors">
+                      &larr; Back to Login
+                    </button>
                   </div>
                 </form>
               )}

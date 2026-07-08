@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import { login, register, completeProfile, updateProfile, getMe, getAllMembers, createCoordinator, getCoordinators, toggleCoordinatorLock, deleteCoordinator, deleteMember } from '../controllers/auth.controller';
+import { resetPassword } from '../controllers/password.controller';
 import { protect, authorize } from '../middlewares/auth';
 
 const router = Router();
 
 router.post('/login', login);
 router.post('/register', register);
+router.post('/reset-password', resetPassword);
 router.post('/complete-profile', protect, completeProfile);
 router.put('/profile', protect, updateProfile);
 router.get('/me', protect, getMe);
