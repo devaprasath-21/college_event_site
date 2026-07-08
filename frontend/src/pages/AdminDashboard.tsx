@@ -558,7 +558,7 @@ export const AdminDashboard: React.FC = () => {
             { id: 'events', label: 'Manage Events', icon: Calendar },
             { id: 'registrations', label: 'Registered Events', icon: CheckSquare },
             { id: 'scanner', label: 'Attendance Check-in', icon: ClipboardCheck },
-            { id: 'winners', label: 'Winners & Certificates', icon: Trophy },
+            { id: 'winners', label: 'Winners & Certificates', icon: Trophy, hideOnMobile: true },
             { id: 'announcements', label: 'Manage Announcements', icon: Megaphone, adminOnly: true, hideOnMobile: true },
             { id: 'support', label: 'Support Tickets', icon: AlertTriangle, adminOnly: true, hideOnMobile: true },
             { id: 'members', label: 'Registered Accounts', icon: Users, adminOnly: true },
@@ -1804,21 +1804,39 @@ export const AdminDashboard: React.FC = () => {
                     {/* Additional Management Actions (Mobile-Optimized) */}
                     <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 w-full">
                       {(user?.role === 'super-admin' || user?.role === 'event-coordinator') && (
-                        <button
-                          onClick={() => { setActiveTab('announcements'); window.scrollTo(0, 0); }}
-                          className="group flex items-center justify-between p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/50 transition-all clickable shadow-sm hover:shadow-md w-full"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:scale-110 transition-transform">
-                              <Megaphone className="w-5 h-5 text-primary" />
+                        <>
+                          <button
+                            onClick={() => { setActiveTab('announcements'); window.scrollTo(0, 0); }}
+                            className="group flex items-center justify-between p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/50 transition-all clickable shadow-sm hover:shadow-md w-full"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:scale-110 transition-transform">
+                                <Megaphone className="w-5 h-5 text-primary" />
+                              </div>
+                              <div className="text-left">
+                                <h4 className="text-sm font-bold text-foreground">Announcements</h4>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">Manage alerts</p>
+                              </div>
                             </div>
-                            <div className="text-left">
-                              <h4 className="text-sm font-bold text-foreground">Announcements</h4>
-                              <p className="text-[10px] text-muted-foreground mt-0.5">Manage alerts</p>
+                            <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                          </button>
+
+                          <button
+                            onClick={() => { setActiveTab('winners'); window.scrollTo(0, 0); }}
+                            className="group flex items-center justify-between p-4 rounded-2xl bg-card border border-border/50 hover:border-indigo-500/50 transition-all clickable shadow-sm hover:shadow-md w-full"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 group-hover:scale-110 transition-transform">
+                                <Trophy className="w-5 h-5 text-indigo-500" />
+                              </div>
+                              <div className="text-left">
+                                <h4 className="text-sm font-bold text-foreground">Winners</h4>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">Manage certificates</p>
+                              </div>
                             </div>
-                          </div>
-                          <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                        </button>
+                            <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-indigo-500 transition-colors" />
+                          </button>
+                        </>
                       )}
                       
                       {user?.role === 'super-admin' && (
