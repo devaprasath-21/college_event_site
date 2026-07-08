@@ -774,7 +774,6 @@ export const AdminDashboard: React.FC = () => {
                           className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition"
                         />
                       </div>
-                      </div>
                     </div>
                     
                     <div className="space-y-1 mt-4">

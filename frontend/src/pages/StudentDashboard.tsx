@@ -1663,7 +1663,7 @@ export const StudentDashboard: React.FC = () => {
                 <span className="text-neutral-500 block text-[10px] uppercase font-black tracking-widest">Registration Countdown</span>
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-amber-400" /> {renderCountdown(selectedEvent.registrationDeadline)}</div>
               </div>
-              </div>
+              
               {selectedEvent.externalLink && (
                 <div className="space-y-1.5 sm:col-span-2">
                   <span className="text-neutral-500 block text-[10px] uppercase font-black tracking-widest">Event Link</span>
