@@ -334,9 +334,9 @@ export const LandingPage: React.FC = () => {
           <h2 className="text-3xl font-display font-bold mt-1">Event Gallery</h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 h-auto md:h-[280px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
           {/* Main Images */}
-          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video sm:aspect-auto">
+          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video">
             <img src="/slide1.jpg" alt="Event Highlights" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
             <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -344,7 +344,7 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video sm:aspect-auto">
+          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video">
             <img src="/slide1.jpg" alt="Audience" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
             <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -352,7 +352,7 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video sm:aspect-auto">
+          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video">
             <img src="/slide1.jpg" alt="Students coding" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
             <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
