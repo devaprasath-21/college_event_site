@@ -340,8 +340,8 @@ export const LandingPage: React.FC = () => {
             <img src="/slide1.jpg" alt="Event Highlights" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
             <div className="absolute bottom-6 left-6 right-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-              <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-2">Flagship Tech Symposium</h3>
-              <p className="text-sm text-neutral-300 line-clamp-2 max-w-lg">Experience the cutting edge of technology with our major campus events, bringing together innovators and creators from everywhere.</p>
+              <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-2">Department Events</h3>
+              <p className="text-sm text-neutral-300 line-clamp-2 max-w-lg">Discover incredible moments, achievements, and activities hosted by our department.</p>
             </div>
             <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md p-3 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <Image className="text-white w-5 h-5" />
@@ -353,7 +353,7 @@ export const LandingPage: React.FC = () => {
             <img src="/slide1.jpg" alt="Workshops" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
             <div className="absolute bottom-5 left-5 right-5 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-500">
-              <h3 className="text-lg font-bold text-white">Interactive Workshops</h3>
+              <h3 className="text-lg font-bold text-white">Event Highlights</h3>
             </div>
             <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <Image className="text-white w-4 h-4" />
@@ -365,7 +365,7 @@ export const LandingPage: React.FC = () => {
             <img src="/slide1.jpg" alt="Cultural Fests" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
             <div className="absolute bottom-5 left-5 right-5 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-500">
-              <h3 className="text-lg font-bold text-white">Cultural Extravaganzas</h3>
+              <h3 className="text-lg font-bold text-white">Student Activities</h3>
             </div>
             <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <Image className="text-white w-4 h-4" />
