@@ -328,35 +328,35 @@ export const LandingPage: React.FC = () => {
 
 
       {/* Gallery Preview Section */}
-      <section id="gallery" className="py-20 px-6 max-w-7xl mx-auto z-10 relative">
-        <div className="text-center mb-12">
+      <section id="gallery" className="py-16 px-6 max-w-7xl mx-auto z-10 relative">
+        <div className="text-center mb-10">
           <span className="text-[10px] font-bold text-primary tracking-widest uppercase block">Visuals</span>
-          <h2 className="text-3xl font-display font-bold mt-1">Campus Moments</h2>
+          <h2 className="text-3xl font-display font-bold mt-1">Event Gallery</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-4 h-auto md:h-[600px]">
-          {/* Main Large Image */}
-          <div className="md:col-span-1 md:row-span-2 rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-lg aspect-square md:aspect-auto">
-            <img src="/slide1.jpg" alt="Main Auditorium Tech Talk" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent opacity-90 transition-opacity duration-500" />
-            <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Image className="text-white w-4 h-4 md:w-5 md:h-5" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 h-auto md:h-[280px]">
+          {/* Main Images */}
+          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video sm:aspect-auto">
+            <img src="/slide1.jpg" alt="Event Highlights" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
+            <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <Image className="text-white w-4 h-4" />
             </div>
           </div>
 
-          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-lg aspect-[16/9] md:aspect-auto">
-            <img src="/slide6.jpeg" alt="Audience" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
+          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video sm:aspect-auto">
+            <img src="/slide1.jpg" alt="Audience" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
             <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Image className="text-white w-3 h-3 md:w-4 md:h-4" />
+              <Image className="text-white w-4 h-4" />
             </div>
           </div>
 
-          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-lg aspect-[16/9] md:aspect-auto">
-            <img src="/slide7.jpeg" alt="Students coding" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
+          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video sm:aspect-auto">
+            <img src="/slide1.jpg" alt="Students coding" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
             <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Image className="text-white w-3 h-3 md:w-4 md:h-4" />
+              <Image className="text-white w-4 h-4" />
             </div>
           </div>
         </div>
