@@ -1,0 +1,169 @@
+{
+  "users": [
+    {
+      "_id": "u_admin1",
+      "username": "GTEC Admin",
+      "email": "admin@gtec.edu.in",
+      "password": "$2a$10$vK6hD3r5h6oM/TewY7Vp3uR5J2Z4GfXmXj7P7G6kFfW2gH8z5bB/a",
+      "role": "super-admin",
+      "createdAt": "2026-07-07T09:29:20.440Z"
+    },
+    {
+      "_id": "u_student1",
+      "username": "Aditya Sharma",
+      "email": "aditya.sharma@gtec.edu.in",
+      "role": "student",
+      "registrationNumber": "SRM12345",
+      "department": "Computer Science",
+      "year": "3rd",
+      "section": "A",
+      "phoneNumber": "9876543210",
+      "participationPoints": 120,
+      "streak": 3,
+      "badges": [
+        "Early Bird",
+        "Code Master"
+      ],
+      "createdAt": "2026-07-07T09:29:20.440Z"
+    },
+    {
+      "_id": "u_o9qezacyc",
+      "participationPoints": 140,
+      "streak": 2,
+      "badges": [
+        "Profile Completed",
+        "First Event"
+      ],
+      "favoriteEvents": [],
+      "createdAt": "2026-07-07T09:56:22.879Z",
+      "username": "dev._.17",
+      "email": "510823205006.it@gtec.ac.in",
+      "password": "$2a$10$SCIIJFc6HD5T8ukst9AQEeNQybgjmDXzF3kWyyZ4YM1dG.5.2NxgC",
+      "role": "student",
+      "name": "DEVAPRASATH A",
+      "registrationNumber": "510823205006",
+      "department": "Information Technology",
+      "year": "4th",
+      "section": "-",
+      "phoneNumber": ""
+    },
+    {
+      "_id": "u_1hz2qtfs4",
+      "participationPoints": 0,
+      "streak": 0,
+      "badges": [],
+      "favoriteEvents": [],
+      "createdAt": "2026-07-07T15:42:29.723Z",
+      "username": "MITHIL",
+      "email": "myth@gmail.com",
+      "password": "$2a$10$KaC5mPhoOvqRKELjs7I4I.2CEKf3KrCn5qq7lce.Q3GgKla6JGrL2",
+      "role": "event-coordinator",
+      "assignedEvent": "quiz",
+      "eventRole": "MEMBER",
+      "coordinatorId": "COORD-4765",
+      "isLocked": false,
+      "plaintextPassword": "123"
+    }
+  ],
+  "events": [
+    {
+      "_id": "e_j4xhyp1hz",
+      "isPublished": true,
+      "isArchived": false,
+      "isRegistrationOpen": true,
+      "gallery": [],
+      "availableSeats": 99,
+      "createdAt": "2026-07-08T03:39:45.945Z",
+      "title": "quiz",
+      "description": "nil",
+      "category": "Technical",
+      "date": "2026-07-10",
+      "time": "09:00 AM",
+      "venue": "hod block",
+      "maxCapacity": 100,
+      "registrationDeadline": "2026-07-09T00:00:00.000Z",
+      "difficultyLevel": "Intermediate",
+      "prizeDetails": "-",
+      "rules": [
+        "Teams of 2-4. Original code only."
+      ],
+      "requirements": [
+        "Bring college ID card."
+      ],
+      "facultyCoordinator": {
+        "username": "Dr. Rajesh Kumar",
+        "email": "rajesh.kumar@campushub.edu",
+        "phone": "9988776655"
+      },
+      "studentCoordinator": {
+        "username": "Student Admin",
+        "email": "student.admin@srm.edu",
+        "phone": "9876543210"
+      },
+      "poster": "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&auto=format&fit=crop&q=60"
+    }
+  ],
+  "registrations": [
+    {
+      "_id": "r_gm7gcs25i",
+      "registrationId": "CH-0119-8908",
+      "status": "Approved",
+      "attended": true,
+      "createdAt": "2026-07-08T03:48:10.143Z",
+      "studentId": "u_o9qezacyc",
+      "eventId": "e_j4xhyp1hz",
+      "qrCodeUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAABcCAYAAADj79JYAAAAAklEQVR4AewaftIAAAJySURBVO3BMW5jQQwFwX7Ev/+Vex0SCsYYSOYqYFX8wRpTrFHFGlWsUQ8vkjBJpUtCp3KShE7lJAmTVLpijSrWqGKNeviFyicl4UYSOpVO5R0qn5SEk2KNKtaoYo16uJSEGyo3VE6ScEPlRhJuqNwo1qhijSrWqIcvk4RO5USlS8I3K9aoYo0q1qiHL6NyIwmdyjcr1qhijSrWqIdLKpOS0Kl0SeiS0KncUPlLxRpVrFHFGvXwiyRMSkKn0iWhU+mScCMJk4o1qlijijXq4YXKN1PpknBD5X8q1qhijSrWqIcXSehUuiScqHRJuKHSJaFTeUcSOpWTJHQqXRJOVLpijSrWqGKNevhFEjqVLgldEjqVG0noVD5JpUtCp/IOlZNijSrWqGKNenihcpKEE5WTJHQqncpJEk5UuiScqNxIwjuKNapYo4o1Kv7gIAnvUPlLSehUuiR0Kl0Sbqh0SThR6Yo1qlijijXq4ZJKl4QbSfgklS4JncoNlRsqN4o1qlijijUq/uCLJKFTOUlCp3KShE9SuVGsUcUaVaxRDy+SMEnlRhJOknCi0iXhRKVLQpeETuWkWKOKNapYox5+ofJJSXiHyiepvEOlS0Kn0hVrVLFGFWvUw6Uk3FC5odIloVM5SUKn0iWhUzlJQqfSJeFGsUYVa1SxRj18mSR0Kl0STlRuJKFT6VS6JJyonBRrVLFGFWvUw5dLQqdykoRO5USlS8KJyjuKNapYo4o16uGSyl9S6ZLQJaFT6VS6JHQqXRI6lS4JXRI6lRvFGlWsUcUa9fCLJExKwjdROUlCp3JSrFHFGlWsUfEHa0yxRhVrVLFG/QOoeh682okbzgAAAABJRU5ErkJggg==",
+      "attendedAt": "2026-07-08T03:53:02.179Z",
+      "certificateIssued": true
+    }
+  ],
+  "announcements": [],
+  "notifications": [
+    {
+      "_id": "n_byldeetcq",
+      "isRead": true,
+      "createdAt": "2026-07-07T10:06:13.873Z",
+      "userId": "u_o9qezacyc",
+      "title": "Registration Confirmed",
+      "message": "You have successfully registered for National Hackathon 2026. Pass ID: CH-3837-8183",
+      "type": "System"
+    },
+    {
+      "_id": "n_t958afdym",
+      "isRead": true,
+      "createdAt": "2026-07-07T14:48:50.743Z",
+      "userId": "u_o9qezacyc",
+      "title": "Certificate Generated!",
+      "message": "Your participation certificate for \"National Hackathon 2026\" is ready to download.",
+      "type": "Certificate"
+    },
+    {
+      "_id": "n_c9pjji8gd",
+      "isRead": true,
+      "createdAt": "2026-07-08T03:48:10.148Z",
+      "userId": "u_o9qezacyc",
+      "title": "Registration Confirmed",
+      "message": "You have successfully registered for quiz. Pass ID: CH-0119-8908",
+      "type": "System"
+    },
+    {
+      "_id": "n_n8j1iuxy6",
+      "isRead": true,
+      "createdAt": "2026-07-08T03:53:02.181Z",
+      "userId": "u_o9qezacyc",
+      "title": "Certificate Generated!",
+      "message": "Your participation certificate for \"quiz\" is ready to download.",
+      "type": "Certificate"
+    },
+    {
+      "_id": "n_z1ttxzpbe",
+      "isRead": true,
+      "createdAt": "2026-07-08T04:03:12.325Z",
+      "userId": "u_o9qezacyc",
+      "title": "Certificate Generated!",
+      "message": "Your participation certificate for \"quiz\" is ready to download.",
+      "type": "Certificate"
+    }
+  ],
+  "supportTickets": []
+}

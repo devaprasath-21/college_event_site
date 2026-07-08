@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── Deep Violet + Electric Indigo — Premium Academic ── */
+    --background: 240 20% 4%;
+    --foreground: 220 16% 92%;
+    
+    --card: 240 18% 7%;
+    --card-foreground: 220 16% 92%;
+    
+    --popover: 240 18% 7%;
+    --popover-foreground: 220 16% 92%;
+    
+    /* Primary: Electric Indigo — professional, unique, memorable */
+    --primary: 248 85% 65%;
+    --primary-foreground: 240 20% 4%;
+    --primary-glow: 248 85% 65%;
+    
+    /* Secondary: Violet-Purple */
+    --secondary: 265 70% 58%;
+    --secondary-foreground: 220 16% 98%;
+    
+    --muted: 240 14% 12%;
+    --muted-foreground: 220 10% 58%;
+    
+    --accent: 248 85% 65%;
+    --accent-foreground: 240 20% 4%;
+    
+    --destructive: 0 62% 44%;
+    --destructive-foreground: 220 16% 98%;
+    
+    --border: 240 14% 16%;
+    --input: 240 14% 16%;
+    --ring: 248 85% 65%;
+    
+    --radius: 0.875rem;
+  }
+
+  .light {
+    --background: 240 20% 98%;
+    --foreground: 240 18% 10%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 240 18% 10%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 18% 10%;
+    
+    --primary: 248 80% 60%;
+    --primary-foreground: 240 20% 98%;
+    --primary-glow: 248 80% 60%;
+    
+    --secondary: 265 65% 55%;
+    --secondary-foreground: 220 16% 98%;
+    
+    --muted: 240 14% 94%;
+    --muted-foreground: 240 8% 46%;
+    
+    --accent: 248 80% 60%;
+    --accent-foreground: 240 18% 10%;
+    
+    --destructive: 0 72% 56%;
+    --destructive-foreground: 220 16% 98%;
+    
+    --border: 240 12% 88%;
+    --input: 240 12% 88%;
+    --ring: 248 80% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/25 selection:text-foreground overflow-x-hidden;
+    font-family: 'Inter', 'DM Sans', system-ui, sans-serif;
+    background-image: 
+      radial-gradient(ellipse at 15% 10%, hsla(248, 85%, 65%, 0.08) 0px, transparent 55%),
+      radial-gradient(ellipse at 85% 90%, hsla(265, 70%, 58%, 0.08) 0px, transparent 55%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / 0.5); }
+}
+
+/* ── Glassmorphism ── */
+.glassmorphism {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.glassmorphism-card {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.025);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.glassmorphism-card:hover {
+  border-color: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.28);
+}
+
+.light .glassmorphism-card {
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* ── Gradient Border Glow ── */
+.glow-card {
+  position: relative;
+  overflow: hidden;
+}
+.glow-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, hsla(var(--primary) / 0.4), hsla(var(--secondary) / 0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.25;
+  transition: opacity 0.3s ease;
+}
+.glow-card:hover::before { opacity: 0.8; }
+
+/* ── 3D Card Flip ── */
+.perspective-1000 { perspective: 1000px; }
+.preserve-3d      { transform-style: preserve-3d; }
+.backface-hidden  { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.rotate-y-180     { transform: rotateY(180deg); }
