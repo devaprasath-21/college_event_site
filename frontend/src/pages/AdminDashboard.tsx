@@ -516,9 +516,12 @@ export const AdminDashboard: React.FC = () => {
           title="Return to Landing Page"
         >
           <img src="/gtec_logo.png" alt="GTEC Logo" className="w-7 h-7 object-contain rounded-md" />
-          <span className="font-display font-bold text-sm tracking-tight">
-            {user?.role === 'super-admin' ? 'Information Technology Administration' : user?.role === 'event-coordinator' ? 'Information Technology Coordinator Portal' : 'Information Technology Volunteer Portal'}
-          </span>
+          <div className="flex flex-col">
+            <span className="font-display font-bold text-sm tracking-tight leading-none">Information Technology</span>
+            <span className="text-[10px] text-muted-foreground mt-0.5 font-medium">
+              {user?.role === 'super-admin' ? 'Administration' : user?.role === 'event-coordinator' ? 'Coordinator Portal' : 'Volunteer Portal'}
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-4">

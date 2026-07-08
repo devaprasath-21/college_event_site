@@ -352,7 +352,10 @@ export const StudentDashboard: React.FC = () => {
           title="Return to Landing Page"
         >
           <img src="/gtec_logo.png" alt="GTEC Logo" className="w-7 h-7 object-contain rounded-md" />
-          <span className="font-display font-bold text-sm tracking-tight">Information Technology Student</span>
+          <div className="flex flex-col">
+            <span className="font-display font-bold text-sm tracking-tight leading-none">Information Technology</span>
+            <span className="text-[10px] text-muted-foreground mt-0.5 font-medium">Student Portal</span>
+          </div>
         </div>
 
         {/* Notifications and profile actions */}
