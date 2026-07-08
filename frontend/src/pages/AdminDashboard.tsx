@@ -10,7 +10,7 @@ import {
   Copy, FolderPlus, Download, Search, Check, X, Camera, Scan, Award, AlertTriangle, LogOut, Trophy, ClipboardCheck, Keyboard, User, MessageSquare, Clock, CheckCircle2, Home, Loader2, ArrowUpRight
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, PieChart, Pie, Cell } from 'recharts';
+
 import confetti from 'canvas-confetti';
 
 export const AdminDashboard: React.FC = () => {
@@ -427,28 +427,33 @@ export const AdminDashboard: React.FC = () => {
     ) || [];
   }, [scanCode, scannerEventId, scannerRegistrations]);
 
-  // Execute QR Scan Check-In
-  const triggerCheckInScan = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!scanCode) return;
+  const executeCheckIn = async (code: string) => {
+    if (!code) return;
     setScanLoading(true);
     setScanResult(null);
     setScanError(null);
     
     try {
       const res = await api.post('/registrations/scan', { 
-        registrationId: scanCode,
+        registrationId: code,
         eventId: scannerEventId || undefined 
       });
       if (res.data.success) {
         setScanResult(res.data);
         confetti({ particleCount: 80, spread: 60, colors: ['#6366f1', '#06b6d4'] });
+        queryClient.invalidateQueries({ queryKey: ['scanner-registrations'] });
       }
     } catch (err: any) {
       setScanError(err.response?.data?.message || 'Check-in failed.');
     } finally {
       setScanLoading(false);
     }
+  };
+
+  // Execute QR Scan Check-In from form
+  const triggerCheckInScan = async (e: React.FormEvent) => {
+    e.preventDefault();
+    executeCheckIn(scanCode);
   };
 
   const handleEditClick = (event: any) => {
@@ -663,49 +668,7 @@ export const AdminDashboard: React.FC = () => {
                     </SpotlightCard>
                   </div>
 
-                  {/* Recharts Analytics graphs */}
-                  <div className="grid grid-cols-1 gap-6">
-                    {/* Student Demographics Pie Chart */}
-                    <div className="border border-white/5 bg-white/[0.01] rounded-2xl p-6">
-                      <h3 className="text-xs font-bold uppercase tracking-wider mb-4">Student Demographics by Department</h3>
-                      <div className="h-60">
-                        {!stats.departmentStats || stats.departmentStats.length === 0 ? (
-                          <div className="h-full flex items-center justify-center text-xs text-muted-foreground">Insufficient department data.</div>
-                        ) : (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                              <Pie
-                                data={stats.departmentStats}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={60}
-                                outerRadius={80}
-                                paddingAngle={5}
-                                dataKey="value"
-                              >
-                                {stats.departmentStats.map((entry: any, index: number) => (
-                                  <Cell key={`cell-${index}`} fill={['#6366f1', '#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'][index % 6]} />
-                                ))}
-                              </Pie>
-                              <Tooltip contentStyle={{ background: '#111827', borderColor: '#374151', fontSize: 11, borderRadius: '8px' }} itemStyle={{ color: '#fff' }} />
-                            </PieChart>
-                          </ResponsiveContainer>
-                        )}
-                      </div>
-                      
-                      {/* Custom Legend */}
-                      {stats.departmentStats && stats.departmentStats.length > 0 && (
-                        <div className="mt-4 flex flex-wrap justify-center gap-3">
-                          {stats.departmentStats.map((entry: any, index: number) => (
-                            <div key={`legend-${index}`} className="flex items-center gap-1.5">
-                              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: ['#6366f1', '#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'][index % 6] }}></span>
-                              <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">{entry.name}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+
 
                   {/* Live Activity Feed */}
                   <div className="border border-white/5 bg-white/[0.01] rounded-2xl p-6">
