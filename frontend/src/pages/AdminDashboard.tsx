@@ -55,6 +55,7 @@ export const AdminDashboard: React.FC = () => {
   const [eventDate, setEventDate] = useState('');
   const [eventTime, setEventTime] = useState('09:00 AM');
   const [eventVenue, setEventVenue] = useState('');
+  const [eventExternalLink, setEventExternalLink] = useState('');
   const [eventCapacity, setEventCapacity] = useState(100);
   const [eventDeadline, setEventDeadline] = useState('');
   const [eventLevel, setEventLevel] = useState<'Beginner' | 'Intermediate' | 'Advanced'>('Beginner');
@@ -428,6 +429,7 @@ export const AdminDashboard: React.FC = () => {
     setEventDate(event.date);
     setEventTime(event.time);
     setEventVenue(event.venue);
+    setEventExternalLink(event.externalLink || '');
     setEventCapacity(event.maxCapacity);
     setEventDeadline(new Date(event.registrationDeadline).toISOString().split('T')[0]);
     setEventLevel(event.difficultyLevel);
@@ -451,6 +453,7 @@ export const AdminDashboard: React.FC = () => {
     setEventDate('');
     setEventTime('09:00 AM');
     setEventVenue('');
+    setEventExternalLink('');
     setEventCapacity(100);
     setEventDeadline('');
     setEventLevel('Beginner');
@@ -469,6 +472,7 @@ export const AdminDashboard: React.FC = () => {
       date: eventDate,
       time: eventTime,
       venue: eventVenue,
+      externalLink: eventExternalLink,
       maxCapacity: eventCapacity,
       registrationDeadline: new Date(eventDeadline),
       difficultyLevel: eventLevel,
@@ -770,6 +774,18 @@ export const AdminDashboard: React.FC = () => {
                           className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition"
                         />
                       </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-1 mt-4">
+                      <label className="text-muted-foreground">External Link (Optional - for online quizzes/events)</label>
+                      <input
+                        type="url"
+                        value={eventExternalLink}
+                        onChange={(e) => setEventExternalLink(e.target.value)}
+                        placeholder="https://forms.gle/... or https://quizizz.com/..."
+                        className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition"
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

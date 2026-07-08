@@ -1663,6 +1663,16 @@ export const StudentDashboard: React.FC = () => {
                 <span className="text-neutral-500 block text-[10px] uppercase font-black tracking-widest">Registration Countdown</span>
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-amber-400" /> {renderCountdown(selectedEvent.registrationDeadline)}</div>
               </div>
+              </div>
+              {selectedEvent.externalLink && (
+                <div className="space-y-1.5 sm:col-span-2">
+                  <span className="text-neutral-500 block text-[10px] uppercase font-black tracking-widest">Event Link</span>
+                  <a href={selectedEvent.externalLink} target="_blank" rel="noopener noreferrer" className="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-2 hover:underline">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    {selectedEvent.externalLink}
+                  </a>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2 mb-8 bg-indigo-500/5 p-4 rounded-xl border border-indigo-500/10">
@@ -1677,6 +1687,17 @@ export const StudentDashboard: React.FC = () => {
               >
                 Close Details
               </button>
+              
+              {selectedEvent.externalLink && (
+                <a
+                  href={selectedEvent.externalLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3.5 bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 border border-indigo-500/30 text-sm font-bold rounded-xl transition-colors text-center flex items-center justify-center gap-2"
+                >
+                  Go to Event Link
+                </a>
+              )}
               {selectedEvent.isRegistrationOpen === false ? (
                 <button
                   disabled
@@ -1727,6 +1748,20 @@ export const StudentDashboard: React.FC = () => {
               
               <span className="text-xs font-bold text-foreground block">{selectedPass.eventId?.title || 'Event details'}</span>
               <span className="text-[10px] text-muted-foreground block mt-1">Date: {selectedPass.eventId?.date} | Place: {selectedPass.eventId?.venue}</span>
+              
+              {selectedPass.eventId?.externalLink && (
+                <div className="mt-4 pt-4 border-t border-dashed border-muted">
+                  <a 
+                    href={selectedPass.eventId?.externalLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-full py-2 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    Open Online Event Link
+                  </a>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-2">
