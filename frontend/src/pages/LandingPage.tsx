@@ -334,27 +334,39 @@ export const LandingPage: React.FC = () => {
           <h2 className="text-3xl font-display font-bold mt-1">Event Gallery</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
-          {/* Main Images */}
-          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-4 md:gap-6 max-w-6xl mx-auto h-auto md:h-[500px]">
+          {/* Featured Large Image */}
+          <div className="md:col-span-2 md:row-span-2 rounded-3xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-xl aspect-square md:aspect-auto">
             <img src="/slide1.jpg" alt="Event Highlights" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
+            <div className="absolute bottom-6 left-6 right-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+              <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-2">Flagship Tech Symposium</h3>
+              <p className="text-sm text-neutral-300 line-clamp-2 max-w-lg">Experience the cutting edge of technology with our major campus events, bringing together innovators and creators from everywhere.</p>
+            </div>
+            <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md p-3 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <Image className="text-white w-5 h-5" />
+            </div>
+          </div>
+
+          {/* Secondary Top Image */}
+          <div className="md:col-span-1 md:row-span-1 rounded-3xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-xl aspect-video md:aspect-auto">
+            <img src="/slide1.jpg" alt="Workshops" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
+            <div className="absolute bottom-5 left-5 right-5 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-500">
+              <h3 className="text-lg font-bold text-white">Interactive Workshops</h3>
+            </div>
             <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <Image className="text-white w-4 h-4" />
             </div>
           </div>
 
-          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video">
-            <img src="/slide1.jpg" alt="Audience" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
-            <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Image className="text-white w-4 h-4" />
+          {/* Secondary Bottom Image */}
+          <div className="md:col-span-1 md:row-span-1 rounded-3xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-xl aspect-video md:aspect-auto">
+            <img src="/slide1.jpg" alt="Cultural Fests" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
+            <div className="absolute bottom-5 left-5 right-5 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-500">
+              <h3 className="text-lg font-bold text-white">Cultural Extravaganzas</h3>
             </div>
-          </div>
-
-          <div className="rounded-2xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-md aspect-video">
-            <img src="/slide1.jpg" alt="Students coding" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity duration-500" />
             <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <Image className="text-white w-4 h-4" />
             </div>
