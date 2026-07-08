@@ -105,10 +105,10 @@ export const LandingPage: React.FC = () => {
       </div>
 
       {/* Glassmorphism Floating Navigation Bar */}
-      <header className="fixed top-4 inset-x-4 max-w-7xl mx-auto h-16 rounded-2xl glassmorphism z-50 px-6 flex items-center justify-between shadow-lg">
-        <div className="flex items-center gap-2">
-          <img src="/gtec_logo.png" alt="GTEC Logo" className="w-8 h-8 object-contain rounded-lg" />
-          <span className="font-display font-bold tracking-tight text-lg text-foreground">Information Technology</span>
+      <header className="fixed top-4 inset-x-4 max-w-7xl mx-auto h-16 rounded-2xl glassmorphism z-50 px-3 md:px-6 flex items-center justify-between shadow-lg">
+        <div className="flex items-center gap-1.5 md:gap-2">
+          <img src="/gtec_logo.png" alt="GTEC Logo" className="w-6 h-6 md:w-8 md:h-8 object-contain rounded-lg flex-shrink-0" />
+          <span className="font-display font-bold tracking-tight text-[11px] sm:text-sm md:text-lg text-foreground leading-none whitespace-nowrap">Information Technology</span>
         </div>
 
         <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-muted-foreground">
@@ -116,20 +116,20 @@ export const LandingPage: React.FC = () => {
           <a href="#gallery" className="hover:text-foreground transition-colors">Gallery</a>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1.5 md:gap-4 flex-shrink-0">
           {/* Light/Dark Toggle */}
           <button 
             onClick={toggleTheme} 
-            className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-foreground transition clickable"
+            className="p-1.5 md:p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-foreground transition clickable"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
 
           {isAuthenticated ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3">
               <button
                 onClick={() => navigate(user?.role === 'student' ? '/dashboard' : '/admin')}
-                className="px-4 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-xl transition shadow-md hover:bg-primary/95 clickable"
+                className="px-3 py-1.5 md:px-4 md:py-2 bg-primary text-primary-foreground text-[10px] md:text-xs font-bold rounded-xl transition shadow-md hover:bg-primary/95 clickable whitespace-nowrap"
               >
                 Dashboard &rarr;
               </button>
@@ -137,7 +137,7 @@ export const LandingPage: React.FC = () => {
           ) : (
             <button
               onClick={() => navigate('/login')}
-              className="px-5 py-2.5 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-xs font-bold rounded-xl transition shadow-md hover:scale-[1.02] clickable"
+              className="px-3 py-1.5 md:px-5 md:py-2.5 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-[10px] md:text-xs font-bold rounded-xl transition shadow-md hover:scale-[1.02] clickable whitespace-nowrap"
             >
               Sign In
             </button>
