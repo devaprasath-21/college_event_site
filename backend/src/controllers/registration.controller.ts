@@ -233,7 +233,7 @@ export const scanAttendance = async (req: AuthRequest, res: Response) => {
   const { registrationId } = req.body;
 
   if (!registrationId) {
-    return res.status(400).json({ success: false, message: 'Registration Pass ID is required' });
+    return res.status(400).json({ success: false, message: 'Registration Pass ID, Name, or Reg No is required' });
   }
 
   try {
@@ -243,12 +243,54 @@ export const scanAttendance = async (req: AuthRequest, res: Response) => {
 
     if (isMongoConnected()) {
       registration = await Registration.findOne({ registrationId });
+      
+      if (!registration) {
+        const students = await User.find({
+          $or: [
+            { name: { $regex: new RegExp(registrationId, 'i') } },
+            { username: { $regex: new RegExp(registrationId, 'i') } },
+            { registrationNumber: { $regex: new RegExp(registrationId, 'i') } }
+          ]
+        });
+
+        if (students.length > 0) {
+          registration = await Registration.findOne({
+            studentId: { $in: students.map(s => s._id) },
+            status: 'Approved',
+            attended: false
+          }).sort({ createdAt: -1 });
+        }
+      }
+
       if (registration) {
         student = await User.findById(registration.studentId);
         event = await Event.findById(registration.eventId);
       }
     } else {
       registration = MockDB.getRegistrations().find(r => r.registrationId === registrationId);
+      
+      if (!registration) {
+        const keyword = registrationId.toLowerCase();
+        const students = MockDB.getUsers().filter(u => 
+          u.name?.toLowerCase().includes(keyword) || 
+          u.username?.toLowerCase().includes(keyword) || 
+          u.registrationNumber?.toLowerCase().includes(keyword)
+        );
+
+        if (students.length > 0) {
+          const studentIds = students.map(s => s._id);
+          const regs = MockDB.getRegistrations().filter(r => 
+            studentIds.includes(r.studentId) && 
+            r.status === 'Approved' && 
+            r.attended === false
+          );
+          if (regs.length > 0) {
+            regs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            registration = regs[0];
+          }
+        }
+      }
+
       if (registration) {
         student = MockDB.findUserById(registration.studentId);
         event = MockDB.findEventById(registration.eventId);

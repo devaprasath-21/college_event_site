@@ -1098,12 +1098,12 @@ export const AdminDashboard: React.FC = () => {
                   <ClipboardCheck className="w-12 h-12 text-secondary mx-auto mb-4 animate-pulse" />
                   <h3 className="text-base font-display font-bold">Attendance Check-in</h3>
                   <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto mb-6">
-                    Type the registration code below to mark student attendance.
+                    Type the registration code, name, or registration number below to mark student attendance.
                   </p>
 
                   <form onSubmit={triggerCheckInScan} className="space-y-4 max-w-xs mx-auto">
                     <div className="space-y-1 text-left">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Ticket Pass Code</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Registration Code, Name, or Reg No</label>
                       <div className="relative">
                         <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-muted-foreground">
                           <Keyboard className="w-4 h-4" />
@@ -1113,7 +1113,7 @@ export const AdminDashboard: React.FC = () => {
                           value={scanCode}
                           onChange={(e) => setScanCode(e.target.value)}
                           required
-                          placeholder="e.g. CH-XXXX-YYYY"
+                          placeholder="e.g. John Doe, 21IT001, CH-XXXX"
                           className="w-full bg-background border border-muted pl-9 pr-3 py-2 text-xs rounded-xl text-foreground outline-none focus:border-primary uppercase font-mono font-bold"
                         />
                       </div>
@@ -1124,7 +1124,7 @@ export const AdminDashboard: React.FC = () => {
                       disabled={scanLoading}
                       className="w-full py-2.5 bg-primary hover:bg-primary/95 text-primary-foreground text-xs font-bold rounded-xl transition shadow-md shadow-primary/25 clickable"
                     >
-                      {scanLoading ? 'Checking entry...' : 'Confirm Ticket Entrance'}
+                      {scanLoading ? 'Checking entry...' : 'Confirm Attendance'}
                     </button>
                   </form>
                 </div>
@@ -1170,7 +1170,7 @@ export const AdminDashboard: React.FC = () => {
                   ) : (
                     <div className="text-muted-foreground py-12">
                       <ClipboardCheck className="w-12 h-12 mx-auto mb-2 opacity-30" />
-                      <p className="text-xs">Enter ticket pass code to display attendance report.</p>
+                      <p className="text-xs">Enter registration code, name, or registration number to display attendance report.</p>
                     </div>
                   )}
                 </div>
