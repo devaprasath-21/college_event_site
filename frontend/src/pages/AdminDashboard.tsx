@@ -665,29 +665,45 @@ export const AdminDashboard: React.FC = () => {
 
                   {/* Recharts Analytics graphs */}
                   <div className="grid grid-cols-1 gap-6">
-                    {/* Registration Trend Area Chart */}
+                    {/* Student Demographics Pie Chart */}
                     <div className="border border-white/5 bg-white/[0.01] rounded-2xl p-6">
-                      <h3 className="text-xs font-bold uppercase tracking-wider mb-4">Registration Velocity Trend</h3>
+                      <h3 className="text-xs font-bold uppercase tracking-wider mb-4">Student Demographics by Department</h3>
                       <div className="h-60">
-                        {stats.registrationTrend?.length === 0 ? (
-                          <div className="h-full flex items-center justify-center text-xs text-muted-foreground">Insufficient registration trends.</div>
+                        {!stats.departmentStats || stats.departmentStats.length === 0 ? (
+                          <div className="h-full flex items-center justify-center text-xs text-muted-foreground">Insufficient department data.</div>
                         ) : (
                           <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={stats.registrationTrend}>
-                              <defs>
-                                <linearGradient id="colorRegs" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4}/>
-                                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
-                                </linearGradient>
-                              </defs>
-                              <XAxis dataKey="day" stroke="#6b7280" fontSize={10} tickLine={false} />
-                              <YAxis stroke="#6b7280" fontSize={10} tickLine={false} />
-                              <Tooltip contentStyle={{ background: '#111827', borderColor: '#374151', fontSize: 11 }} />
-                              <Area type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorRegs)" />
-                            </AreaChart>
+                            <PieChart>
+                              <Pie
+                                data={stats.departmentStats}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={60}
+                                outerRadius={80}
+                                paddingAngle={5}
+                                dataKey="value"
+                              >
+                                {stats.departmentStats.map((entry: any, index: number) => (
+                                  <Cell key={`cell-${index}`} fill={['#6366f1', '#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'][index % 6]} />
+                                ))}
+                              </Pie>
+                              <Tooltip contentStyle={{ background: '#111827', borderColor: '#374151', fontSize: 11, borderRadius: '8px' }} itemStyle={{ color: '#fff' }} />
+                            </PieChart>
                           </ResponsiveContainer>
                         )}
                       </div>
+                      
+                      {/* Custom Legend */}
+                      {stats.departmentStats && stats.departmentStats.length > 0 && (
+                        <div className="mt-4 flex flex-wrap justify-center gap-3">
+                          {stats.departmentStats.map((entry: any, index: number) => (
+                            <div key={`legend-${index}`} className="flex items-center gap-1.5">
+                              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: ['#6366f1', '#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'][index % 6] }}></span>
+                              <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">{entry.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
 
