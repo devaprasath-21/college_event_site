@@ -156,7 +156,7 @@ export const LoginPage: React.FC = () => {
             <div>
               <div className="flex flex-col items-center mb-6 text-center">
                 <img src="/gtec_logo.png" alt="GTEC Logo" className="w-16 h-16 object-contain rounded-xl mb-3 shadow-md" />
-                <h1 className="text-2xl font-display font-bold tracking-tight text-foreground">GTEC Portal</h1>
+                <h1 className="text-2xl font-display font-bold tracking-tight text-foreground">Information technology</h1>
                 <p className="text-xs text-muted-foreground mt-1">Sign in or create an account</p>
               </div>
 
@@ -246,7 +246,7 @@ export const LoginPage: React.FC = () => {
                   
                   <div className="text-center pt-2">
                     <span className="text-xs text-muted-foreground">
-                      New to GTEC Portal?{' '}
+                      New to Portal?{' '}
                       <button type="button" onClick={() => setActiveTab('register')} className="text-primary font-bold hover:underline">
                         Create account
                       </button>
@@ -515,7 +515,7 @@ export const LoginPage: React.FC = () => {
               disabled={loading}
               className="w-full py-3 bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xs font-bold rounded-xl transition-all shadow-md mt-4 clickable disabled:opacity-50"
             >
-              {loading ? 'Saving details...' : 'Unlock GTEC'}
+              {loading ? 'Saving details...' : 'Unlock Information Technology'}
             </button>
           </form>
         </SpotlightCard>

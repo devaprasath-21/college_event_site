@@ -517,7 +517,7 @@ export const AdminDashboard: React.FC = () => {
         >
           <img src="/gtec_logo.png" alt="GTEC Logo" className="w-7 h-7 object-contain rounded-md" />
           <span className="font-display font-bold text-sm tracking-tight">
-            {user?.role === 'super-admin' ? 'GTEC Administration' : user?.role === 'event-coordinator' ? 'GTEC Coordinator Portal' : 'GTEC Volunteer Portal'}
+            {user?.role === 'super-admin' ? 'Information Technology Administration' : user?.role === 'event-coordinator' ? 'Information Technology Coordinator Portal' : 'Information Technology Volunteer Portal'}
           </span>
         </div>
 
@@ -2260,7 +2260,7 @@ export const AdminDashboard: React.FC = () => {
 
                 {/* Subtle background watermark */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] text-[100px] md:text-[160px] font-black text-slate-900 tracking-tighter pointer-events-none select-none">
-                  GTEC
+                  Information Technology
                 </div>
 
                 <div className="text-center relative z-10">
@@ -2337,7 +2337,7 @@ export const AdminDashboard: React.FC = () => {
 
       {/* FOOTER */}
       <footer className="py-6 text-center text-xs text-muted-foreground border-t border-border mt-auto print:hidden">
-        <p>GTEC Coordinator Portal &copy; 2026. All rights reserved.</p>
+        <p>Information Technology Coordinator Portal &copy; 2026. All rights reserved.</p>
       </footer>
 
       {/* PRINTABLE HOD SHEET */}

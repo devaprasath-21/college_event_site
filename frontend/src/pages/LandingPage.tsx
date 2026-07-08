@@ -23,11 +23,7 @@ export const LandingPage: React.FC = () => {
 
   // Campus Visuals Carousel state
   const campusSlides = [
-    { src: '/slide1.jpg', title: 'Campus Academic Blocks', desc: 'State of the art learning facilities' },
-    { src: '/slide2.jpg', title: 'Lush Green Walkways', desc: 'Eco-friendly campus environment' },
-    { src: '/slide3.jpg', title: 'Sports & Recreation', desc: 'Outdoor badminton and basketball courts' },
-    { src: '/slide4.jpg', title: 'Library & Resource Center', desc: 'Extensive digital and physical collections' },
-    { src: '/slide5.jpg', title: 'High-Tech Labs', desc: 'Modern equipment for practical learning' }
+    { src: '/slide1.jpg', title: 'Information Technology Department', desc: 'Department of Information Technology' }
   ];
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -112,7 +108,7 @@ export const LandingPage: React.FC = () => {
       <header className="fixed top-4 inset-x-4 max-w-7xl mx-auto h-16 rounded-2xl glassmorphism z-50 px-6 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-2">
           <img src="/gtec_logo.png" alt="GTEC Logo" className="w-8 h-8 object-contain rounded-lg" />
-          <span className="font-display font-bold tracking-tight text-lg text-foreground">GTEC</span>
+          <span className="font-display font-bold tracking-tight text-lg text-foreground">Information Technology</span>
         </div>
 
         <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-muted-foreground">
@@ -152,7 +148,7 @@ export const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center justify-center text-center min-h-[90vh] z-10">
         <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 px-4 py-1.5 rounded-full text-xs font-semibold text-secondary animate-pulse mb-6">
-          <Sparkles className="w-4 h-4" /> Welcome to GTEC Event Hub
+          <Sparkles className="w-4 h-4" /> Welcome to Information Technology Event Hub
         </div>
 
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-black tracking-tight text-foreground max-w-4xl leading-[1.1]">
@@ -196,7 +192,7 @@ export const LandingPage: React.FC = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-80" />
               <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-auto md:max-w-md p-3 md:p-4 bg-black/40 backdrop-blur-md rounded-xl border border-white/10 text-left pointer-events-none transform transition-all translate-y-0">
-                <h3 className="text-sm md:text-base font-bold text-white tracking-tight leading-tight">GTEC</h3>
+                <h3 className="text-sm md:text-base font-bold text-white tracking-tight leading-tight">Information Technology</h3>
                 <p className="text-[9px] md:text-[10px] text-neutral-300 mt-0.5">Ganadipathy Tulsi's Jain Engineering College</p>
               </div>
             </div>
@@ -372,9 +368,9 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
             <img src="/gtec_logo.png" alt="GTEC Logo" className="w-6 h-6 object-contain rounded-md" />
-            <span className="font-display font-bold text-sm text-white">GTEC</span>
+            <span className="font-display font-bold text-sm text-white">Information Technology</span>
           </div>
-          <p>&copy; 2026 GTEC. Ganadipathy Tulsi's Jain Engineering College, Department of Information Technology. All rights reserved.</p>
+          <p>&copy; 2026 Information Technology. Ganadipathy Tulsi's Jain Engineering College, Department of Information Technology. All rights reserved.</p>
           <div className="flex gap-4">
             <a href="/login" className="hover:text-white transition">Admin Portal</a>
             <span>&middot;</span>

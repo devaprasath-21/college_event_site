@@ -352,7 +352,7 @@ export const StudentDashboard: React.FC = () => {
           title="Return to Landing Page"
         >
           <img src="/gtec_logo.png" alt="GTEC Logo" className="w-7 h-7 object-contain rounded-md" />
-          <span className="font-display font-bold text-sm tracking-tight">GTEC Student</span>
+          <span className="font-display font-bold text-sm tracking-tight">Information Technology Student</span>
         </div>
 
         {/* Notifications and profile actions */}
@@ -1922,7 +1922,7 @@ export const StudentDashboard: React.FC = () => {
                 <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4 w-5 h-5 md:w-8 md:h-8 border-b-2 border-r-2 border-amber-700" />
 
                 {/* Subtle background watermark */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] text-7xl md:text-[160px] font-black text-slate-900 -tracking-tighter pointer-events-none select-none">GTEC</div>
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] text-7xl md:text-[160px] font-black text-slate-900 -tracking-tighter pointer-events-none select-none">Information Technology</div>
 
                 <div className="text-center relative z-10">
                   {/* College name */}
