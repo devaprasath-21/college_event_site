@@ -337,16 +337,24 @@ export const LandingPage: React.FC = () => {
         {eventsData && eventsData.filter((e: any) => e.poster).length > 0 ? (
           <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto items-start">
             {eventsData.filter((e: any) => e.poster).map((event: any) => (
-              <div key={event._id} className="w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(25%-1.5rem)] rounded-2xl overflow-hidden border border-white/10 relative group shadow-lg flex-shrink-0 bg-muted/10">
-                <img src={event.poster} alt={event.title} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-0 md:translate-y-4 group-hover:translate-y-0 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-500">
-                  <h3 className="text-sm font-bold text-white mb-1 line-clamp-2">{event.title}</h3>
-                  <div className="flex gap-2 items-center">
-                    <span className="text-[10px] font-bold bg-primary/20 text-primary px-2 py-1 rounded-md">{event.category}</span>
-                    <a href={event.poster} target="_blank" rel="noreferrer" className="text-[10px] text-white hover:text-primary transition bg-black/50 p-1.5 rounded-full ml-auto cursor-pointer flex items-center justify-center">
-                      <Image className="w-3.5 h-3.5" />
-                    </a>
+              <div key={event._id} className="w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(50%-1.5rem)] lg:w-[calc(40%-1.5rem)] xl:w-[calc(33.333%-1.5rem)] flex-shrink-0 relative group">
+                {/* Desktop "Beautiful Box" styling (invisible on mobile) */}
+                <div className="hidden md:block absolute inset-0 bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl transition-all duration-500 group-hover:bg-white/[0.04] group-hover:border-white/20" />
+                
+                {/* Poster Container */}
+                <div className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-white/10 md:border-0 md:m-5 lg:m-6">
+                  <img src={event.poster} alt={event.title} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
+                  
+                  {/* Overlay and Text Content */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6 transform translate-y-0 md:translate-y-4 group-hover:translate-y-0 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-500">
+                    <h3 className="text-sm lg:text-base font-bold text-white mb-2 line-clamp-2">{event.title}</h3>
+                    <div className="flex gap-2 items-center">
+                      <span className="text-[10px] lg:text-xs font-bold bg-primary/20 text-primary px-2.5 py-1 rounded-md">{event.category}</span>
+                      <a href={event.poster} target="_blank" rel="noreferrer" className="text-[10px] text-white hover:text-primary transition bg-black/50 p-2 rounded-full ml-auto cursor-pointer flex items-center justify-center">
+                        <Image className="w-4 h-4 lg:w-5 lg:h-5" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
