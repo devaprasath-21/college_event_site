@@ -836,12 +836,23 @@ export const AdminDashboard: React.FC = () => {
                       <label className="text-muted-foreground flex items-center gap-2">Event Poster</label>
                       
                       {(eventPosterFile || eventPosterUrl) && (
-                        <div className="mb-3 relative w-full h-48 sm:h-64 rounded-xl overflow-hidden border border-white/10">
+                        <div className="mb-3 relative w-32 h-48 sm:w-40 sm:h-56 rounded-xl overflow-hidden border border-border group">
                           <img 
                             src={eventPosterFile ? URL.createObjectURL(eventPosterFile) : eventPosterUrl} 
                             alt="Poster Preview" 
                             className="w-full h-full object-cover"
                           />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEventPosterFile(null);
+                              setEventPosterUrl('');
+                            }}
+                            className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-red-500 text-white rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                            title="Remove Poster"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          </button>
                         </div>
                       )}
 
@@ -876,7 +887,7 @@ export const AdminDashboard: React.FC = () => {
                             type="datetime-local"
                             value={eventLinkPublishDate}
                             onChange={(e) => setEventLinkPublishDate(e.target.value)}
-                            className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+                            className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition"
                           />
                           <p className="text-[10px] text-muted-foreground mt-1 leading-tight">Leave empty to make it available immediately to registered students.</p>
                         </div>
@@ -886,7 +897,7 @@ export const AdminDashboard: React.FC = () => {
                             type="datetime-local"
                             value={eventLinkExpiryDate}
                             onChange={(e) => setEventLinkExpiryDate(e.target.value)}
-                            className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+                            className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition"
                           />
                           <p className="text-[10px] text-muted-foreground mt-1 leading-tight">Optional. Access closes automatically after this time.</p>
                         </div>
@@ -905,7 +916,7 @@ export const AdminDashboard: React.FC = () => {
                           value={eventDeadline}
                           onChange={(e) => setEventDeadline(e.target.value)}
                           required
-                          className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+                          className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition"
                         />
                       </div>
                       <div className="space-y-1">
