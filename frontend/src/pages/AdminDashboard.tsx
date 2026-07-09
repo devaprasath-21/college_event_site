@@ -528,9 +528,7 @@ export const AdminDashboard: React.FC = () => {
       try {
         const formData = new FormData();
         formData.append('poster', eventPosterFile);
-        const res = await api.post('/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        const res = await api.post('/upload', formData); // Axios automatically sets multipart/form-data with correct boundary
         if (res.data.success) {
           posterPath = res.data.url;
         }
@@ -835,6 +833,17 @@ export const AdminDashboard: React.FC = () => {
                     
                     <div className="space-y-1 mt-4">
                       <label className="text-muted-foreground flex items-center gap-2"><span className="text-base">🖼️</span> Event Poster</label>
+                      
+                      {(eventPosterFile || eventPosterUrl) && (
+                        <div className="mb-3 relative w-full h-48 sm:h-64 rounded-xl overflow-hidden border border-white/10">
+                          <img 
+                            src={eventPosterFile ? URL.createObjectURL(eventPosterFile) : eventPosterUrl} 
+                            alt="Poster Preview" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+
                       <input
                         type="file"
                         accept="image/*"
@@ -889,13 +898,13 @@ export const AdminDashboard: React.FC = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="space-y-1">
-                        <label className="text-muted-foreground">Reg Deadline (YYYY-MM-DD)</label>
+                        <label className="text-muted-foreground">Reg Deadline</label>
                         <input
-                          type="date"
+                          type="datetime-local"
                           value={eventDeadline}
                           onChange={(e) => setEventDeadline(e.target.value)}
                           required
-                          className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition"
+                          className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
                         />
                       </div>
                       <div className="space-y-1">

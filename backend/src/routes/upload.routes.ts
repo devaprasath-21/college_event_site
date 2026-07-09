@@ -31,7 +31,9 @@ router.post('/', protect, authorize('super-admin', 'event-coordinator'), upload.
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded' });
     }
-    const fileUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.headers['x-forwarded-host'] || req.get('host');
+    const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
     res.status(200).json({ success: true, url: fileUrl });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
