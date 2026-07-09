@@ -904,11 +904,18 @@ export const StudentDashboard: React.FC = () => {
                       onClick={() => setSelectedEvent(event)}
                       className="group flex flex-col bg-card border border-border/60 hover:border-primary/40 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
                     >
-                      {/* Top Accent Line */}
-                      <div className="absolute top-0 inset-x-0 h-1.5" style={{ background: bg }} />
+                      {/* Poster Image or Top Accent Line */}
+                      {event.poster ? (
+                        <div className="w-full h-40 bg-muted overflow-hidden relative">
+                          <img src={event.poster} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          <div className="absolute top-0 inset-x-0 h-1.5" style={{ background: bg }} />
+                        </div>
+                      ) : (
+                        <div className="absolute top-0 inset-x-0 h-1.5 z-10" style={{ background: bg }} />
+                      )}
 
                       {/* Card Body */}
-                      <div className="p-6 flex flex-col flex-1 bg-background relative pt-7">
+                      <div className="p-6 flex flex-col flex-1 bg-background relative pt-5">
                         {/* Header: Badges & Favorite */}
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex flex-wrap gap-2">
@@ -1031,6 +1038,11 @@ export const StudentDashboard: React.FC = () => {
                       className="p-6 glassmorphism-card flex flex-col justify-between"
                       glowColor="rgba(6, 182, 212, 0.1)"
                     >
+                      {reg.eventId?.poster && (
+                        <div className="w-full h-32 bg-muted overflow-hidden rounded-xl mb-4">
+                          <img src={reg.eventId.poster} alt={reg.eventId.title} className="w-full h-full object-cover" />
+                        </div>
+                      )}
                       <div>
                         <div className="flex justify-between items-center mb-3">
                           <span className="text-[10px] font-mono text-muted-foreground">Pass ID: {reg.registrationId}</span>

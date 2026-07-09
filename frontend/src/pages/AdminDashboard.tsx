@@ -526,15 +526,16 @@ export const AdminDashboard: React.FC = () => {
     if (eventPosterFile) {
       setIsUploadingPoster(true);
       try {
-        const formData = new FormData();
-        formData.append('poster', eventPosterFile);
-        const res = await api.post('/upload', formData); // Axios automatically sets multipart/form-data with correct boundary
-        if (res.data.success) {
-          posterPath = res.data.url;
-        }
+        const base64String = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(eventPosterFile);
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = error => reject(error);
+        });
+        posterPath = base64String;
       } catch (err) {
-        console.error('Failed to upload poster:', err);
-        alert('Failed to upload poster. Event will be saved without the new poster.');
+        console.error('Failed to process poster:', err);
+        alert('Failed to process poster. Event will be saved without the new poster.');
       } finally {
         setIsUploadingPoster(false);
       }
@@ -832,7 +833,7 @@ export const AdminDashboard: React.FC = () => {
                     </div>
                     
                     <div className="space-y-1 mt-4">
-                      <label className="text-muted-foreground flex items-center gap-2"><span className="text-base">🖼️</span> Event Poster</label>
+                      <label className="text-muted-foreground flex items-center gap-2">Event Poster</label>
                       
                       {(eventPosterFile || eventPosterUrl) && (
                         <div className="mb-3 relative w-full h-48 sm:h-64 rounded-xl overflow-hidden border border-white/10">
@@ -857,7 +858,7 @@ export const AdminDashboard: React.FC = () => {
 
                     <div className="space-y-4 mt-4 bg-muted/10 p-4 rounded-xl border border-white/5">
                       <div className="space-y-1">
-                        <label className="text-muted-foreground flex items-center gap-2"><span className="text-base">🔒</span> Private Event Link</label>
+                        <label className="text-muted-foreground flex items-center gap-2">Private Event Link</label>
                         <input
                           type="url"
                           value={eventExternalLink}
@@ -870,7 +871,7 @@ export const AdminDashboard: React.FC = () => {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="text-muted-foreground flex items-center gap-2"><span className="text-base">⏰</span> Link Publish Date & Time</label>
+                          <label className="text-muted-foreground flex items-center gap-2">Link Publish Date & Time</label>
                           <input
                             type="datetime-local"
                             value={eventLinkPublishDate}
@@ -880,7 +881,7 @@ export const AdminDashboard: React.FC = () => {
                           <p className="text-[10px] text-muted-foreground mt-1 leading-tight">Leave empty to make it available immediately to registered students.</p>
                         </div>
                         <div className="space-y-1">
-                          <label className="text-muted-foreground flex items-center gap-2"><span className="text-base">⏳</span> Link Expiry Date & Time</label>
+                          <label className="text-muted-foreground flex items-center gap-2">Link Expiry Date & Time</label>
                           <input
                             type="datetime-local"
                             value={eventLinkExpiryDate}
@@ -892,7 +893,7 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                       
                       <p className="text-xs font-medium text-foreground flex items-center gap-2 mt-2 pt-2 border-t border-white/5">
-                        <span className="text-base">🔒</span> GtecSphere checks login, registration, release time and expiry before giving access.
+                        GtecSphere checks login, registration, release time and expiry before giving access.
                       </p>
                     </div>
 
