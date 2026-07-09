@@ -16,6 +16,7 @@ import registrationRoutes from './routes/registration.routes';
 import announcementRoutes from './routes/announcement.routes';
 import notificationRoutes from './routes/notification.routes';
 import supportRoutes from './routes/support.routes';
+import uploadRoutes from './routes/upload.routes';
 
 const app = express();
 const server = http.createServer(app);
@@ -53,6 +54,7 @@ app.use('/api/registrations', registrationRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/support', supportRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Error Handling Middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

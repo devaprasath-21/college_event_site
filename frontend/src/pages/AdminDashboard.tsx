@@ -58,6 +58,11 @@ export const AdminDashboard: React.FC = () => {
   const [eventTime, setEventTime] = useState('09:00 AM');
   const [eventVenue, setEventVenue] = useState('');
   const [eventExternalLink, setEventExternalLink] = useState('');
+  const [eventPosterFile, setEventPosterFile] = useState<File | null>(null);
+  const [eventPosterUrl, setEventPosterUrl] = useState('');
+  const [isUploadingPoster, setIsUploadingPoster] = useState(false);
+  const [eventLinkPublishDate, setEventLinkPublishDate] = useState('');
+  const [eventLinkExpiryDate, setEventLinkExpiryDate] = useState('');
   const [eventCapacity, setEventCapacity] = useState(100);
   const [eventDeadline, setEventDeadline] = useState('');
   const [eventLevel, setEventLevel] = useState<'Beginner' | 'Intermediate' | 'Advanced'>('Beginner');
@@ -456,6 +461,14 @@ export const AdminDashboard: React.FC = () => {
     executeCheckIn(scanCode);
   };
 
+  const formatDateTimeLocal = (dateString?: string | Date) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+    const offset = date.getTimezoneOffset() * 60000;
+    return (new Date(date.getTime() - offset)).toISOString().slice(0, 16);
+  };
+
   const handleEditClick = (event: any) => {
     setEditingEventId(event._id);
     setEventTitle(event.title);
@@ -464,7 +477,11 @@ export const AdminDashboard: React.FC = () => {
     setEventDate(event.date);
     setEventTime(event.time);
     setEventVenue(event.venue);
+    setEventPosterUrl(event.poster || '');
+    setEventPosterFile(null);
     setEventExternalLink(event.externalLink || '');
+    setEventLinkPublishDate(formatDateTimeLocal(event.linkPublishDate));
+    setEventLinkExpiryDate(formatDateTimeLocal(event.linkExpiryDate));
     setEventCapacity(event.maxCapacity);
     setEventDeadline(new Date(event.registrationDeadline).toISOString().split('T')[0]);
     setEventLevel(event.difficultyLevel);
@@ -488,7 +505,11 @@ export const AdminDashboard: React.FC = () => {
     setEventDate('');
     setEventTime('09:00 AM');
     setEventVenue('');
+    setEventPosterFile(null);
+    setEventPosterUrl('');
     setEventExternalLink('');
+    setEventLinkPublishDate('');
+    setEventLinkExpiryDate('');
     setEventCapacity(100);
     setEventDeadline('');
     setEventLevel('Beginner');
@@ -498,8 +519,29 @@ export const AdminDashboard: React.FC = () => {
     setShowEventForm(false);
   };
 
-  const handleCreateSubmit = (e: React.FormEvent) => {
+  const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    let posterPath = eventPosterUrl;
+    if (eventPosterFile) {
+      setIsUploadingPoster(true);
+      try {
+        const formData = new FormData();
+        formData.append('poster', eventPosterFile);
+        const res = await api.post('/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        if (res.data.success) {
+          posterPath = res.data.url;
+        }
+      } catch (err) {
+        console.error('Failed to upload poster:', err);
+        alert('Failed to upload poster. Event will be saved without the new poster.');
+      } finally {
+        setIsUploadingPoster(false);
+      }
+    }
+
     saveEventMutation.mutate({
       title: eventTitle,
       description: eventDesc,
@@ -507,7 +549,10 @@ export const AdminDashboard: React.FC = () => {
       date: eventDate,
       time: eventTime,
       venue: eventVenue,
+      poster: posterPath || undefined,
       externalLink: eventExternalLink,
+      linkPublishDate: eventLinkPublishDate ? new Date(eventLinkPublishDate).toISOString() : undefined,
+      linkExpiryDate: eventLinkExpiryDate ? new Date(eventLinkExpiryDate).toISOString() : undefined,
       maxCapacity: eventCapacity,
       registrationDeadline: new Date(eventDeadline),
       difficultyLevel: eventLevel,
@@ -789,14 +834,57 @@ export const AdminDashboard: React.FC = () => {
                     </div>
                     
                     <div className="space-y-1 mt-4">
-                      <label className="text-muted-foreground">External Link (Optional - for online quizzes/events)</label>
+                      <label className="text-muted-foreground flex items-center gap-2"><span className="text-base">🖼️</span> Event Poster</label>
                       <input
-                        type="url"
-                        value={eventExternalLink}
-                        onChange={(e) => setEventExternalLink(e.target.value)}
-                        placeholder="https://forms.gle/... or https://quizizz.com/..."
-                        className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setEventPosterFile(e.target.files?.[0] || null)}
+                        className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                       />
+                      {eventPosterUrl && !eventPosterFile && (
+                        <p className="text-[10px] text-muted-foreground mt-1">Current poster will be kept unless a new file is uploaded.</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-4 mt-4 bg-muted/10 p-4 rounded-xl border border-white/5">
+                      <div className="space-y-1">
+                        <label className="text-muted-foreground flex items-center gap-2"><span className="text-base">🔒</span> Private Event Link</label>
+                        <input
+                          type="url"
+                          value={eventExternalLink}
+                          onChange={(e) => setEventExternalLink(e.target.value)}
+                          placeholder="https://forms.gle/... or https://quizizz.com/..."
+                          className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">Only registered students can access this protected link.</p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-muted-foreground flex items-center gap-2"><span className="text-base">⏰</span> Link Publish Date & Time</label>
+                          <input
+                            type="datetime-local"
+                            value={eventLinkPublishDate}
+                            onChange={(e) => setEventLinkPublishDate(e.target.value)}
+                            className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+                          />
+                          <p className="text-[10px] text-muted-foreground mt-1 leading-tight">Leave empty to make it available immediately to registered students.</p>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-muted-foreground flex items-center gap-2"><span className="text-base">⏳</span> Link Expiry Date & Time</label>
+                          <input
+                            type="datetime-local"
+                            value={eventLinkExpiryDate}
+                            onChange={(e) => setEventLinkExpiryDate(e.target.value)}
+                            className="w-full bg-background border border-muted px-3 py-2 rounded-xl text-foreground outline-none focus:border-primary transition [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+                          />
+                          <p className="text-[10px] text-muted-foreground mt-1 leading-tight">Optional. Access closes automatically after this time.</p>
+                        </div>
+                      </div>
+                      
+                      <p className="text-xs font-medium text-foreground flex items-center gap-2 mt-2 pt-2 border-t border-white/5">
+                        <span className="text-base">🔒</span> GtecSphere checks login, registration, release time and expiry before giving access.
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -854,20 +942,16 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="border-t border-white/5 pt-4 flex gap-4 justify-end">
-                      <button
-                        type="button"
-                        onClick={resetEventForm}
-                        className="px-5 py-2.5 bg-muted hover:bg-muted/80 text-foreground font-semibold rounded-xl transition"
-                      >
+                    <div className="flex gap-4 pt-4 border-t border-white/10">
+                      <button type="button" onClick={resetEventForm} className="flex-1 py-3 text-sm font-bold bg-muted/50 text-foreground hover:bg-muted rounded-xl transition">
                         Cancel
                       </button>
-                      <button
-                        type="submit"
-                        disabled={saveEventMutation.isPending}
-                        className="px-5 py-2.5 bg-primary text-primary-foreground font-bold rounded-xl transition shadow-md shadow-primary/20 clickable"
+                      <button 
+                        type="submit" 
+                        disabled={saveEventMutation.isPending || isUploadingPoster}
+                        className="flex-[2] py-3 text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition shadow-lg shadow-primary/25 disabled:opacity-50"
                       >
-                        {saveEventMutation.isPending ? 'Saving event...' : 'Publish Campus Event'}
+                        {isUploadingPoster ? 'Uploading Poster...' : saveEventMutation.isPending ? 'Saving event...' : 'Publish Campus Event'}
                       </button>
                     </div>
                   </form>

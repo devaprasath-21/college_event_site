@@ -226,6 +226,8 @@ export const duplicateEvent = async (req: AuthRequest, res: Response) => {
       date: sourceEvent.date,
       time: sourceEvent.time,
       venue: sourceEvent.venue,
+      linkPublishDate: sourceEvent.linkPublishDate,
+      linkExpiryDate: sourceEvent.linkExpiryDate,
       registrationDeadline: new Date(sourceEvent.registrationDeadline),
       maxCapacity: sourceEvent.maxCapacity,
       availableSeats: sourceEvent.maxCapacity,

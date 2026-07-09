@@ -9,6 +9,8 @@ export interface IEvent {
   time: string;
   venue: string;
   externalLink?: string; // For online events like quizzes
+  linkPublishDate?: Date;
+  linkExpiryDate?: Date;
   registrationDeadline: Date;
   maxCapacity: number;
   availableSeats: number;
@@ -48,6 +50,8 @@ const eventSchema = new Schema<IEvent>({
   time: { type: String, required: true },
   venue: { type: String, required: true },
   externalLink: { type: String, default: '' },
+  linkPublishDate: { type: Date },
+  linkExpiryDate: { type: Date },
   registrationDeadline: { type: Date, required: true },
   maxCapacity: { type: Number, required: true },
   availableSeats: { type: Number, required: true },

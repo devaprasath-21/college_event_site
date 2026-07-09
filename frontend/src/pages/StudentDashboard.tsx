@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import confetti from 'canvas-confetti';
+import { jsPDF } from 'jspdf';
 
 export const StudentDashboard: React.FC = () => {
   const { user, logout, refreshUser } = useAuth();
@@ -278,6 +279,44 @@ export const StudentDashboard: React.FC = () => {
     }
   };
 
+  const downloadPosterAsPDF = async (posterUrl: string, eventTitle: string) => {
+    try {
+      const doc = new jsPDF();
+      
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = posterUrl;
+      
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = doc.internal.pageSize.getHeight();
+      
+      const imgRatio = img.width / img.height;
+      const pdfRatio = pdfWidth / pdfHeight;
+      
+      let finalWidth = pdfWidth;
+      let finalHeight = pdfWidth / imgRatio;
+      
+      if (finalHeight > pdfHeight) {
+        finalHeight = pdfHeight;
+        finalWidth = pdfHeight * imgRatio;
+      }
+      
+      const x = (pdfWidth - finalWidth) / 2;
+      const y = (pdfHeight - finalHeight) / 2;
+      
+      doc.addImage(img, 'JPEG', x, y, finalWidth, finalHeight);
+      doc.save(`${eventTitle.replace(/\s+/g, '_')}_Poster.pdf`);
+    } catch (error) {
+      console.error('Failed to generate PDF', error);
+      alert('Failed to generate PDF poster.');
+    }
+  };
+
   // Event Registration mutation (One-Click)
   const registerMutation = useMutation({
     mutationFn: async (eventId: string) => {
@@ -341,6 +380,19 @@ export const StudentDashboard: React.FC = () => {
       </span>
     );
   };
+
+  // Check if link can be accessed based on publish and expiry dates
+  const canAccessLink = (eventObj: any) => {
+    if (!eventObj?.externalLink) return false;
+    const now = new Date().getTime();
+    if (eventObj.linkPublishDate && now < new Date(eventObj.linkPublishDate).getTime()) return false;
+    if (eventObj.linkExpiryDate && now > new Date(eventObj.linkExpiryDate).getTime()) return false;
+    return true;
+  };
+
+  const isRegisteredForSelected = selectedEvent 
+    ? myRegistrations?.some((r: any) => r.eventId?._id === selectedEvent._id) 
+    : false;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -1644,6 +1696,19 @@ export const StudentDashboard: React.FC = () => {
               <span className="text-xs font-bold bg-fuchsia-500/20 text-fuchsia-400 px-3 py-1.5 rounded-md border border-fuchsia-500/30 tracking-wide uppercase">{selectedEvent.difficultyLevel}</span>
             </div>
 
+            {selectedEvent.poster && (
+              <div className="mb-6 group relative">
+                <img src={selectedEvent.poster} alt={selectedEvent.title} className="w-full h-64 object-cover rounded-2xl border border-white/10 shadow-lg" />
+                <button
+                  onClick={() => downloadPosterAsPDF(selectedEvent.poster, selectedEvent.title)}
+                  className="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-bold rounded-2xl"
+                >
+                  <Download className="w-6 h-6" />
+                  Download Poster as PDF
+                </button>
+              </div>
+            )}
+
             <p className="text-sm sm:text-base text-neutral-300 leading-relaxed mb-8 font-medium">{selectedEvent.description}</p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border-y border-white/10 py-6 mb-8 text-sm bg-white/[0.02] rounded-2xl p-6">
@@ -1667,7 +1732,7 @@ export const StudentDashboard: React.FC = () => {
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-amber-400" /> {renderCountdown(selectedEvent.registrationDeadline)}</div>
               </div>
               
-              {selectedEvent.externalLink && (
+              {selectedEvent.externalLink && isRegisteredForSelected && canAccessLink(selectedEvent) && (
                 <div className="space-y-1.5 sm:col-span-2">
                   <span className="text-neutral-500 block text-[10px] uppercase font-black tracking-widest">Event Link</span>
                   <a href={selectedEvent.externalLink} target="_blank" rel="noopener noreferrer" className="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-2 hover:underline">
@@ -1691,7 +1756,7 @@ export const StudentDashboard: React.FC = () => {
                 Close Details
               </button>
               
-              {selectedEvent.externalLink && (
+              {selectedEvent.externalLink && isRegisteredForSelected && canAccessLink(selectedEvent) && (
                 <a
                   href={selectedEvent.externalLink}
                   target="_blank"
@@ -1752,7 +1817,7 @@ export const StudentDashboard: React.FC = () => {
               <span className="text-xs font-bold text-foreground block">{selectedPass.eventId?.title || 'Event details'}</span>
               <span className="text-[10px] text-muted-foreground block mt-1">Date: {selectedPass.eventId?.date} | Place: {selectedPass.eventId?.venue}</span>
               
-              {selectedPass.eventId?.externalLink && (
+              {selectedPass.eventId?.externalLink && canAccessLink(selectedPass.eventId) && (
                 <div className="mt-4 pt-4 border-t border-dashed border-muted">
                   <a 
                     href={selectedPass.eventId?.externalLink} 
