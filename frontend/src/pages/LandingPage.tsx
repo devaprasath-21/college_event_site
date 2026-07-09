@@ -334,44 +334,29 @@ export const LandingPage: React.FC = () => {
           <h2 className="text-3xl font-display font-bold mt-1">Event Gallery</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-4 md:gap-6 max-w-6xl mx-auto h-auto md:h-[500px]">
-          {/* Featured Large Image */}
-          <div className="md:col-span-2 md:row-span-2 rounded-3xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-xl aspect-square md:aspect-auto">
-            <img src="/slide1.jpg" alt="Event Highlights" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
-            <div className="absolute bottom-6 left-6 right-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-              <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-2">Department Events</h3>
-              <p className="text-sm text-neutral-300 line-clamp-2 max-w-lg">Discover incredible moments, achievements, and activities hosted by our department.</p>
-            </div>
-            <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md p-3 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Image className="text-white w-5 h-5" />
-            </div>
+        {eventsData && eventsData.filter((e: any) => e.poster).length > 0 ? (
+          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 max-w-7xl mx-auto">
+            {eventsData.filter((e: any) => e.poster).map((event: any) => (
+              <div key={event._id} className="rounded-2xl overflow-hidden border border-white/10 relative group shadow-lg break-inside-avoid">
+                <img src={event.poster} alt={event.title} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-0 md:translate-y-4 group-hover:translate-y-0 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-500">
+                  <h3 className="text-sm font-bold text-white mb-1 line-clamp-2">{event.title}</h3>
+                  <div className="flex gap-2 items-center">
+                    <span className="text-[10px] font-bold bg-primary/20 text-primary px-2 py-1 rounded-md">{event.category}</span>
+                    <a href={event.poster} target="_blank" rel="noreferrer" className="text-[10px] text-white hover:text-primary transition bg-black/50 p-1.5 rounded-full ml-auto cursor-pointer flex items-center justify-center">
+                      <Image className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-
-          {/* Secondary Top Image */}
-          <div className="md:col-span-1 md:row-span-1 rounded-3xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-xl aspect-video md:aspect-auto">
-            <img src="/slide1.jpg" alt="Workshops" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
-            <div className="absolute bottom-5 left-5 right-5 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-500">
-              <h3 className="text-lg font-bold text-white">Event Highlights</h3>
-            </div>
-            <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Image className="text-white w-4 h-4" />
-            </div>
+        ) : (
+          <div className="text-center py-10">
+            <p className="text-muted-foreground text-sm">No posters to display yet.</p>
           </div>
-
-          {/* Secondary Bottom Image */}
-          <div className="md:col-span-1 md:row-span-1 rounded-3xl overflow-hidden border border-white/10 relative group cursor-pointer shadow-xl aspect-video md:aspect-auto">
-            <img src="/slide1.jpg" alt="Cultural Fests" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
-            <div className="absolute bottom-5 left-5 right-5 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-500">
-              <h3 className="text-lg font-bold text-white">Student Activities</h3>
-            </div>
-            <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md p-2 rounded-full opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Image className="text-white w-4 h-4" />
-            </div>
-          </div>
-        </div>
+        )}
       </section>
 
 

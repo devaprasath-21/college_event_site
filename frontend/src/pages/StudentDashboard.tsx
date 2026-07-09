@@ -1709,15 +1709,39 @@ export const StudentDashboard: React.FC = () => {
             </div>
 
             {selectedEvent.poster && (
-              <div className="mb-6 group relative">
-                <img src={selectedEvent.poster} alt={selectedEvent.title} className="w-full h-64 object-cover rounded-2xl border border-white/10 shadow-lg" />
-                <button
-                  onClick={() => downloadPosterAsPDF(selectedEvent.poster, selectedEvent.title)}
-                  className="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-bold rounded-2xl"
-                >
-                  <Download className="w-6 h-6" />
-                  Download Poster as PDF
-                </button>
+              <div className="mb-6 flex flex-col gap-2">
+                <div className="group relative rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+                  <img src={selectedEvent.poster} alt={selectedEvent.title} className="w-full h-auto object-cover max-h-96" />
+                  <div className="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex items-center justify-center gap-4">
+                    <button
+                      onClick={() => window.open(selectedEvent.poster, '_blank')}
+                      className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl flex items-center gap-2 transition"
+                    >
+                      <Eye className="w-5 h-5" /> View
+                    </button>
+                    <button
+                      onClick={() => downloadPosterAsPDF(selectedEvent.poster, selectedEvent.title)}
+                      className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl flex items-center gap-2 transition"
+                    >
+                      <Download className="w-5 h-5" /> PDF
+                    </button>
+                  </div>
+                </div>
+                {/* Mobile action buttons */}
+                <div className="flex sm:hidden items-center gap-2 w-full">
+                  <button
+                    onClick={() => window.open(selectedEvent.poster, '_blank')}
+                    className="flex-1 py-2.5 bg-white/10 text-white font-bold rounded-xl flex items-center justify-center gap-2 border border-white/5"
+                  >
+                    <Eye className="w-4 h-4" /> View Full
+                  </button>
+                  <button
+                    onClick={() => downloadPosterAsPDF(selectedEvent.poster, selectedEvent.title)}
+                    className="flex-1 py-2.5 bg-indigo-500 text-white font-bold rounded-xl flex items-center justify-center gap-2"
+                  >
+                    <Download className="w-4 h-4" /> Download PDF
+                  </button>
+                </div>
               </div>
             )}
 
