@@ -331,13 +331,13 @@ export const LandingPage: React.FC = () => {
       <section id="gallery" className="py-16 px-6 max-w-7xl mx-auto z-10 relative">
         <div className="text-center mb-10">
           <span className="text-[10px] font-bold text-primary tracking-widest uppercase block">Visuals</span>
-          <h2 className="text-3xl font-display font-bold mt-1">Event Gallery</h2>
+          <h2 className="text-3xl font-display font-bold mt-1">Post Gallery</h2>
         </div>
 
         {eventsData && eventsData.filter((e: any) => e.poster).length > 0 ? (
-          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 max-w-7xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto items-start">
             {eventsData.filter((e: any) => e.poster).map((event: any) => (
-              <div key={event._id} className="rounded-2xl overflow-hidden border border-white/10 relative group shadow-lg break-inside-avoid">
+              <div key={event._id} className="w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(25%-1.5rem)] rounded-2xl overflow-hidden border border-white/10 relative group shadow-lg flex-shrink-0 bg-muted/10">
                 <img src={event.poster} alt={event.title} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-0 md:translate-y-4 group-hover:translate-y-0 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-500">
