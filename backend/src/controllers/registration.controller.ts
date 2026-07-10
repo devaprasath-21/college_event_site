@@ -48,6 +48,14 @@ export const createRegistration = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ success: false, message: 'You have already registered for this event!' });
     }
 
+    if (event.isRegistrationOpen === false) {
+      return res.status(400).json({ success: false, message: 'Registration is closed for this event.' });
+    }
+
+    if (event.registrationDeadline && new Date(event.registrationDeadline).getTime() < Date.now()) {
+      return res.status(400).json({ success: false, message: 'Registration deadline has passed!' });
+    }
+
     if (event.availableSeats <= 0) {
       return res.status(400).json({ success: false, message: 'Event is fully booked!' });
     }

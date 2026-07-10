@@ -43,7 +43,8 @@ export const LandingPage: React.FC = () => {
     queryFn: async () => {
       const res = await api.get('/events?status=published');
       return res.data.data;
-    }
+    },
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes to improve load time
   });
 
   // Typing effect logic
@@ -334,16 +335,19 @@ export const LandingPage: React.FC = () => {
           <h2 className="text-3xl font-display font-bold mt-1">Post Gallery</h2>
         </div>
 
-        {eventsData && eventsData.filter((e: any) => e.poster).length > 0 ? (
+        {isLoading ? (
+          <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto items-start animate-pulse">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(50%-1.5rem)] lg:w-[calc(40%-1.5rem)] xl:w-[calc(33.333%-1.5rem)] h-[500px] bg-muted/50 rounded-2xl flex-shrink-0" />
+            ))}
+          </div>
+        ) : eventsData && eventsData.filter((e: any) => e.poster).length > 0 ? (
           <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto items-start">
             {eventsData.filter((e: any) => e.poster).map((event: any) => (
               <div key={event._id} className="w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(50%-1.5rem)] lg:w-[calc(40%-1.5rem)] xl:w-[calc(33.333%-1.5rem)] flex-shrink-0 relative group">
-                {/* Desktop "Beautiful Box" styling (invisible on mobile) */}
-                <div className="hidden md:block absolute inset-0 bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl transition-all duration-500 group-hover:bg-white/[0.04] group-hover:border-white/20" />
-                
                 {/* Poster Container */}
-                <div className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-white/10 md:border-0 md:m-5 lg:m-6">
-                  <img src={event.poster} alt={event.title} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="relative rounded-2xl overflow-hidden shadow-lg border border-border/40">
+                  <img src={event.poster} alt={event.title} loading="lazy" className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
                   
                   {/* Overlay and Text Content */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
