@@ -344,22 +344,62 @@ export const LandingPage: React.FC = () => {
         ) : eventsData && eventsData.filter((e: any) => e.poster).length > 0 ? (
           <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto items-start">
             {eventsData.filter((e: any) => e.poster).map((event: any) => (
-              <div key={event._id} className="w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(50%-1.5rem)] lg:w-[calc(40%-1.5rem)] xl:w-[calc(33.333%-1.5rem)] flex-shrink-0 relative group">
+              <div key={event._id} className="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(50%-1.5rem)] xl:w-[calc(50%-1.5rem)] flex-shrink-0 relative group">
                 {/* Poster Container */}
-                <div className="relative rounded-2xl overflow-hidden shadow-lg border border-border/40">
-                  <img src={event.poster} alt={event.title} loading="lazy" className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="relative rounded-2xl overflow-hidden shadow-lg border border-border/40 lg:flex lg:h-[280px] bg-card hover:border-primary/50 transition-colors">
                   
-                  {/* Overlay and Text Content */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6 transform translate-y-0 md:translate-y-4 group-hover:translate-y-0 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-500">
-                    <h3 className="text-sm lg:text-base font-bold text-white mb-2 line-clamp-2">{event.title}</h3>
-                    <div className="flex gap-2 items-center">
-                      <span className="text-[10px] lg:text-xs font-bold bg-primary/20 text-primary px-2.5 py-1 rounded-md">{event.category}</span>
-                      <a href={event.poster} target="_blank" rel="noreferrer" className="text-[10px] text-white hover:text-primary transition bg-black/50 p-2 rounded-full ml-auto cursor-pointer flex items-center justify-center">
-                        <Image className="w-4 h-4 lg:w-5 lg:h-5" />
-                      </a>
+                  {/* Image container */}
+                  <div className="relative lg:w-2/5 overflow-hidden h-full flex items-center justify-center bg-muted">
+                    <img src={event.poster} alt={event.title} loading="lazy" className="w-full h-auto lg:h-full lg:object-cover group-hover:scale-105 transition-transform duration-700" />
+                    
+                    {/* Overlay and Text Content - Mobile Only */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 lg:hidden" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 lg:hidden">
+                      <h3 className="text-sm font-bold text-white mb-2 line-clamp-2">{event.title}</h3>
+                      <div className="flex gap-2 items-center">
+                        <span className="text-[10px] font-bold bg-primary/20 text-primary px-2.5 py-1 rounded-md">{event.category}</span>
+                        <a href={event.poster} target="_blank" rel="noreferrer" className="text-[10px] text-white hover:text-primary transition bg-black/50 p-2 rounded-full ml-auto cursor-pointer flex items-center justify-center">
+                          <Image className="w-4 h-4" />
+                        </a>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Details Box - Desktop Only */}
+                  <div className="hidden lg:flex lg:w-3/5 p-6 bg-card/40 backdrop-blur-sm flex-col justify-center border-l border-border/40">
+                    <div className="flex items-center gap-2 mb-3">
+                       <span className="text-[10px] font-bold bg-primary/20 text-primary px-2.5 py-1 rounded-md uppercase tracking-wider">{event.category}</span>
+                       {event.difficultyLevel && <span className="text-[10px] font-medium text-muted-foreground border border-border/50 px-2.5 py-1 rounded-md">{event.difficultyLevel}</span>}
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2 leading-tight group-hover:text-primary transition-colors">{event.title}</h3>
+                    <div className="space-y-2.5 mb-6">
+                       <p className="text-sm text-muted-foreground flex items-center gap-2 font-medium">
+                         <Calendar className="w-4 h-4 text-emerald-500" /> 
+                         {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                       </p>
+                       <p className="text-sm text-muted-foreground flex items-center gap-2 font-medium">
+                         <MapPin className="w-4 h-4 text-fuchsia-500" /> 
+                         <span className="truncate">{event.venue}</span>
+                       </p>
+                    </div>
+                    <div className="mt-auto flex justify-between items-center">
+                       {event.isRegistrationOpen === false ? (
+                          <span className="text-red-500 font-bold text-sm bg-red-500/10 px-3 py-1.5 rounded-lg">Registration Closed</span>
+                       ) : (
+                          <span onClick={() => {
+                            if (!isAuthenticated) navigate('/login');
+                            else if (user?.role === 'student') navigate('/student');
+                            else navigate('/admin');
+                          }} className="text-primary font-bold text-sm flex items-center gap-1 group-hover:translate-x-1 transition-transform cursor-pointer bg-primary/10 hover:bg-primary/20 px-3 py-1.5 rounded-lg">
+                            Register Now <ArrowUpRight className="w-4 h-4" />
+                          </span>
+                       )}
+                       <a href={event.poster} target="_blank" rel="noreferrer" className="text-xs text-muted-foreground hover:text-primary transition flex items-center gap-1.5 bg-muted px-3 py-1.5 rounded-lg">
+                          <Image className="w-4 h-4" /> View Full
+                       </a>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             ))}
