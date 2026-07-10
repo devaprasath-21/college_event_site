@@ -86,6 +86,16 @@ export const getEvents = async (req: Request, res: Response) => {
       events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
 
+    // Strip external link for students/unauthenticated users
+    const isStudentOrGuest = !(req as AuthRequest).user || (req as AuthRequest).user?.role === 'student';
+    if (isStudentOrGuest) {
+      events = events.map(e => {
+        const ev = typeof e.toObject === 'function' ? e.toObject() : { ...e };
+        delete ev.externalLink;
+        return ev;
+      });
+    }
+
     return res.status(200).json({ success: true, count: events.length, data: events });
   } catch (error: any) {
     console.error('Get events error:', error);
@@ -112,9 +122,16 @@ export const getEventById = async (req: Request, res: Response) => {
       return res.status(404).json({ success: false, message: 'Event not found' });
     }
 
+    // Strip external link for students/unauthenticated users
+    const isStudentOrGuest = !(req as AuthRequest).user || (req as AuthRequest).user?.role === 'student';
+    if (isStudentOrGuest) {
+      event = typeof event.toObject === 'function' ? event.toObject() : { ...event };
+      delete event.externalLink;
+    }
+
     return res.status(200).json({ success: true, data: event });
   } catch (error: any) {
-    console.error('Get event by ID error:', error);
+    console.error('Get single event error:', error);
     return res.status(500).json({ success: false, message: 'Failed to retrieve event details', error: error.message });
   }
 };

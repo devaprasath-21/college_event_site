@@ -394,9 +394,12 @@ export const StudentDashboard: React.FC = () => {
     return true;
   };
 
-  const isRegisteredForSelected = selectedEvent 
-    ? myRegistrations?.some((r: any) => r.eventId?._id === selectedEvent._id) 
-    : false;
+  const registeredEventObj = selectedEvent 
+    ? myRegistrations?.find((r: any) => r.eventId?._id === selectedEvent._id)?.eventId 
+    : null;
+    
+  const isRegisteredForSelected = !!registeredEventObj;
+  const displayEventObj = registeredEventObj || selectedEvent;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -1771,12 +1774,12 @@ export const StudentDashboard: React.FC = () => {
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-amber-400" /> {renderCountdown(selectedEvent.registrationDeadline)}</div>
               </div>
               
-              {selectedEvent.externalLink && isRegisteredForSelected && canAccessLink(selectedEvent) && (
+              {displayEventObj?.externalLink && isRegisteredForSelected && canAccessLink(displayEventObj) && (
                 <div className="space-y-1.5 sm:col-span-2">
                   <span className="text-neutral-500 block text-[10px] uppercase font-black tracking-widest">Event Link</span>
-                  <a href={selectedEvent.externalLink} target="_blank" rel="noopener noreferrer" className="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-2 hover:underline">
+                  <a href={displayEventObj.externalLink} target="_blank" rel="noopener noreferrer" className="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-2 hover:underline">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                    {selectedEvent.externalLink}
+                    {displayEventObj.externalLink}
                   </a>
                 </div>
               )}
@@ -1795,9 +1798,9 @@ export const StudentDashboard: React.FC = () => {
                 Close Details
               </button>
               
-              {selectedEvent.externalLink && isRegisteredForSelected && canAccessLink(selectedEvent) && (
+              {displayEventObj?.externalLink && isRegisteredForSelected && canAccessLink(displayEventObj) && (
                 <a
-                  href={selectedEvent.externalLink}
+                  href={displayEventObj.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3.5 bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 border border-indigo-500/30 text-sm font-bold rounded-xl transition-colors text-center flex items-center justify-center gap-2"

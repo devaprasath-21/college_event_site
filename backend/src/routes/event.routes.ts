@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { getEvents, getEventById, createEvent, updateEvent, duplicateEvent, deleteEvent, uploadGalleryMedia, announceWinners } from '../controllers/event.controller';
-import { protect, authorize } from '../middlewares/auth';
+import { protect, authorize, optionalAuth } from '../middlewares/auth';
 
 const router = Router();
 
 // Public routes
-router.get('/', getEvents);
-router.get('/:id', getEventById);
+router.get('/', optionalAuth, getEvents);
+router.get('/:id', optionalAuth, getEventById);
 
 // Protected admin/coordinator routes
 router.post('/', protect, authorize('super-admin', 'event-coordinator'), createEvent);

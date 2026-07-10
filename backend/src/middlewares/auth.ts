@@ -65,6 +65,37 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
   }
 };
 
+export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  let token;
+
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    try {
+      token = req.headers.authorization.split(' ')[1];
+      const decoded: any = jwt.verify(token, JWT_SECRET);
+      
+      let userProfile = null;
+      if (isMongoConnected()) {
+        const dbUser = await User.findById(decoded.id).select('-password');
+        if (dbUser) {
+          userProfile = { id: dbUser._id.toString(), email: dbUser.email, role: dbUser.role, name: dbUser.name };
+        }
+      } else {
+        const mockUser = MockDB.findUserById(decoded.id);
+        if (mockUser) {
+          userProfile = { id: mockUser._id, email: mockUser.email, role: mockUser.role, name: mockUser.name };
+        }
+      }
+
+      if (userProfile) {
+        req.user = userProfile;
+      }
+    } catch (error) {
+      // Ignore token errors for optional auth
+    }
+  }
+  next();
+};
+
 export const authorize = (...roles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user || !roles.includes(req.user.role)) {
