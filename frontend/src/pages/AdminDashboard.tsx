@@ -483,7 +483,7 @@ export const AdminDashboard: React.FC = () => {
     setEventLinkPublishDate(formatDateTimeLocal(event.linkPublishDate));
     setEventLinkExpiryDate(formatDateTimeLocal(event.linkExpiryDate));
     setEventCapacity(event.maxCapacity);
-    setEventDeadline(new Date(event.registrationDeadline).toISOString().split('T')[0]);
+    setEventDeadline(formatDateTimeLocal(event.registrationDeadline));
     setEventLevel(event.difficultyLevel);
     setEventPrize(event.prizeDetails);
     setEventRules(event.rules.join('\n'));

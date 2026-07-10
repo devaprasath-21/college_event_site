@@ -840,147 +840,46 @@ export const StudentDashboard: React.FC = () => {
                   <h3 className="text-sm font-bold text-primary tracking-widest uppercase mb-4 flex items-center gap-2">
                     <Sparkles className="w-4 h-4" /> Featured Event
                   </h3>
-                  {(() => {
-                    const featuredEvent = displayedEvents[0];
-                    const gradients: Record<string, string> = {
-                      Technical:  'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
-                      Cultural:   'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)',
-                      Sports:     'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
-                      Workshop:   'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)',
-                    };
-                    const bg = gradients[featuredEvent.category] || gradients['Technical'];
+                  <div className="space-y-6">
+                    {displayedEvents.map((event: any, idx: number) => {
+                      const gradients: Record<string, string> = {
+                        Technical:  'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
+                        Cultural:   'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)',
+                        Sports:     'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
+                        Workshop:   'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)',
+                      };
+                      const bg = gradients[event.category] || gradients['Technical'];
 
-                    return (
-                      <div 
-                        onClick={() => setSelectedEvent(featuredEvent)}
-                        className="group relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl cursor-pointer w-full bg-card"
-                      >
-                        <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity" style={{ background: bg }} />
-                        <div className="relative p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
-                          <div className="flex-1 space-y-4">
-                            <div className="flex flex-wrap gap-2">
-                              <span className="text-xs font-bold bg-primary/20 text-primary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md">{featuredEvent.category}</span>
-                              <span className="text-xs font-bold bg-secondary/20 text-secondary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md flex items-center gap-1"><Clock className="w-3 h-3"/> {new Date(featuredEvent.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                      return (
+                        <div 
+                          key={event._id}
+                          onClick={() => setSelectedEvent(event)}
+                          className="group relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl cursor-pointer w-full bg-card"
+                        >
+                          <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity" style={{ background: bg }} />
+                          <div className="relative p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                            <div className="flex-1 space-y-4">
+                              <div className="flex flex-wrap gap-2">
+                                <span className="text-xs font-bold bg-primary/20 text-primary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md">{event.category}</span>
+                                <span className="text-xs font-bold bg-secondary/20 text-secondary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md flex items-center gap-1"><Clock className="w-3 h-3"/> {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                              </div>
+                              <div>
+                                <h3 className="text-2xl md:text-3xl font-display font-black text-foreground tracking-tight group-hover:text-primary transition-colors">{event.title}</h3>
+                                <p className="text-muted-foreground mt-2 line-clamp-2 max-w-2xl">{event.description}</p>
+                              </div>
+                              <div className="flex items-center gap-4 text-sm font-semibold text-foreground/80">
+                                <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-primary" /> {event.venue}</span>
+                                <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-secondary" /> {event.availableSeats} Seats Left</span>
+                              </div>
                             </div>
-                            <div>
-                              <h3 className="text-2xl md:text-3xl font-display font-black text-foreground tracking-tight group-hover:text-primary transition-colors">{featuredEvent.title}</h3>
-                              <p className="text-muted-foreground mt-2 line-clamp-2 max-w-2xl">{featuredEvent.description}</p>
-                            </div>
-                            <div className="flex items-center gap-4 text-sm font-semibold text-foreground/80">
-                              <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-primary" /> {featuredEvent.venue}</span>
-                              <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-secondary" /> {featuredEvent.availableSeats} Seats Left</span>
-                            </div>
+                            <button className="px-6 py-3 bg-foreground text-background font-bold rounded-xl whitespace-nowrap shadow-xl hover:scale-105 transition-transform flex items-center gap-2">
+                              View Details <ArrowUpRight className="w-4 h-4" />
+                            </button>
                           </div>
-                          <button className="px-6 py-3 bg-foreground text-background font-bold rounded-xl whitespace-nowrap shadow-xl hover:scale-105 transition-transform flex items-center gap-2">
-                            View Details <ArrowUpRight className="w-4 h-4" />
-                          </button>
                         </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-              )}
-
-              {/* Event catalog grid */}
-              {eventsLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <SkeletonCard />
-                  <SkeletonCard />
-                  <SkeletonCard />
-                </div>
-              ) : !displayedEvents || displayedEvents.length === 0 ? (
-                <div className="text-center py-12 border border-border/50 rounded-2xl bg-white/[0.01]">
-                  <p className="text-sm text-muted-foreground">{showFavoritesOnly ? 'You have no favorited events.' : 'No events found matching your filter criteria.'}</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {displayedEvents.slice(1).map((event: any, idx: number) => {
-                    // Gradient fallback palettes per category
-                    const gradients: Record<string, string> = {
-                      Technical:  'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
-                      Cultural:   'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)',
-                      Sports:     'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
-                      Workshop:   'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)',
-                    };
-                    const bg = gradients[event.category] || gradients['Technical'];
-
-                    return (
-                    <div
-                      key={event._id}
-                      onClick={() => setSelectedEvent(event)}
-                      className="group flex flex-col bg-card border border-border/60 hover:border-primary/40 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
-                    >
-                      {/* Poster Image or Top Accent Line */}
-                      {event.poster ? (
-                        <div className="w-full h-40 bg-muted overflow-hidden relative">
-                          <img src={event.poster} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                          <div className="absolute top-0 inset-x-0 h-1.5" style={{ background: bg }} />
-                        </div>
-                      ) : (
-                        <div className="absolute top-0 inset-x-0 h-1.5 z-10" style={{ background: bg }} />
-                      )}
-
-                      {/* Card Body */}
-                      <div className="p-6 flex flex-col flex-1 bg-background relative pt-5">
-                        {/* Header: Badges & Favorite */}
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex flex-wrap gap-2">
-                            <span className="text-[10px] font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-md tracking-wide uppercase">{event.category}</span>
-                            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md tracking-wide uppercase ${
-                              event.difficultyLevel === 'Advanced' ? 'bg-red-500/10 text-red-500' : 
-                              event.difficultyLevel === 'Intermediate' ? 'bg-amber-500/10 text-amber-600' : 'bg-emerald-500/10 text-emerald-500'
-                            }`}>{event.difficultyLevel}</span>
-                          </div>
-                          
-                          <button
-                            type="button"
-                            onClick={(e) => toggleFavorite(event._id, e)}
-                            className="p-1.5 -mr-1.5 -mt-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-red-500 transition-colors z-20 clickable"
-                          >
-                            <Heart className={`w-5 h-5 ${favorites.includes(event._id) ? 'fill-red-500 text-red-500' : ''}`} />
-                          </button>
-                        </div>
-                        {/* Date and Venue Row */}
-                        <div className="flex justify-between items-center text-xs text-muted-foreground mb-3 font-medium">
-                          <span className="flex items-center gap-1.5 text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">
-                            <Clock className="w-3.5 h-3.5" /> {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                          </span>
-                          <span className="flex items-center gap-1.5 truncate max-w-[50%]">
-                            <MapPin className="w-3.5 h-3.5 shrink-0" /> <span className="truncate">{event.venue}</span>
-                          </span>
-                        </div>
-
-                        {/* Title and Desc */}
-                        <h4 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{event.title}</h4>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mt-2 flex-1">{event.description}</p>
-                        
-                        {/* Divider */}
-                        <div className="w-full h-px bg-border/60 my-4" />
-
-                        {/* Footer: Seats and Action */}
-                        <div className="flex justify-between items-center">
-                          <div className="flex flex-col">
-                            <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">Availability</span>
-                            {event.isRegistrationOpen === false ? (
-                              <span className="text-red-500 font-bold text-sm">Closed</span>
-                            ) : (
-                              <span className="text-emerald-500 font-bold text-sm flex items-center gap-1.5">
-                                Open <span className="text-xs text-muted-foreground font-semibold bg-muted px-1.5 py-0.5 rounded">({event.availableSeats} left)</span>
-                              </span>
-                            )}
-                          </div>
-
-                          {event.isRegistrationOpen !== false && (
-                            <span className="bg-foreground text-background group-hover:bg-primary group-hover:text-primary-foreground px-4 py-2 rounded-xl text-sm font-bold shadow-md transition-all flex items-center gap-1.5">
-                              Book Pass <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
 
               )}
             </div>
