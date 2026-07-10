@@ -344,17 +344,17 @@ export const LandingPage: React.FC = () => {
         ) : eventsData && eventsData.filter((e: any) => e.poster).length > 0 ? (
           <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto items-start">
             {eventsData.filter((e: any) => e.poster).map((event: any) => (
-              <div key={event._id} className="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(50%-1.5rem)] xl:w-[calc(50%-1.5rem)] flex-shrink-0 relative group">
+              <div key={event._id} className="w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(50%-1.5rem)] xl:w-[calc(50%-1.5rem)] flex-shrink-0 relative group">
                 {/* Poster Container */}
-                <div className="relative rounded-2xl overflow-hidden shadow-lg border border-border/40 lg:flex lg:h-[280px] bg-card hover:border-primary/50 transition-colors">
+                <div className="relative rounded-2xl overflow-hidden shadow-lg border border-border/40 md:flex md:h-[280px] bg-card hover:border-primary/50 transition-colors">
                   
                   {/* Image container */}
-                  <div className="relative lg:w-2/5 overflow-hidden h-full flex items-center justify-center bg-muted">
-                    <img src={event.poster} alt={event.title} loading="lazy" className="w-full h-auto lg:h-full lg:object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="relative md:w-2/5 overflow-hidden h-full flex items-center justify-center bg-muted">
+                    <img src={event.poster} alt={event.title} loading="lazy" className="w-full h-auto md:h-full md:object-cover group-hover:scale-105 transition-transform duration-700" />
                     
                     {/* Overlay and Text Content - Mobile Only */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 lg:hidden" />
-                    <div className="absolute bottom-0 left-0 right-0 p-4 lg:hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 md:hidden" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 md:hidden">
                       <h3 className="text-sm font-bold text-white mb-2 line-clamp-2">{event.title}</h3>
                       <div className="flex gap-2 items-center">
                         <span className="text-[10px] font-bold bg-primary/20 text-primary px-2.5 py-1 rounded-md">{event.category}</span>
@@ -366,7 +366,7 @@ export const LandingPage: React.FC = () => {
                   </div>
 
                   {/* Details Box - Desktop Only */}
-                  <div className="hidden lg:flex lg:w-3/5 p-6 bg-card/40 backdrop-blur-sm flex-col justify-center border-l border-border/40">
+                  <div className="hidden md:flex md:w-3/5 p-6 bg-card/40 backdrop-blur-sm flex-col justify-center border-l border-border/40">
                     <div className="flex items-center gap-2 mb-3">
                        <span className="text-[10px] font-bold bg-primary/20 text-primary px-2.5 py-1 rounded-md uppercase tracking-wider">{event.category}</span>
                        {event.difficultyLevel && <span className="text-[10px] font-medium text-muted-foreground border border-border/50 px-2.5 py-1 rounded-md">{event.difficultyLevel}</span>}
