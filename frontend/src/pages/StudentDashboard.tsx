@@ -564,9 +564,8 @@ export const StudentDashboard: React.FC = () => {
 
                     {/* Meta info row */}
                     <div className="flex items-center gap-5 flex-wrap text-muted-foreground text-xs font-medium">
-                      <span className="flex items-center gap-1.5">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                        {heroEvent.date}
+                      <span className="text-white font-bold flex items-center gap-1.5 opacity-90"><CalendarIcon className="w-4 h-4" /> 
+                        {new Date(heroEvent.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                       </span>
                       {heroEvent.time && (
                         <span className="flex items-center gap-1.5">
@@ -858,7 +857,7 @@ export const StudentDashboard: React.FC = () => {
                           <div className="flex-1 space-y-4">
                             <div className="flex flex-wrap gap-2">
                               <span className="text-xs font-bold bg-primary/20 text-primary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md">{featuredEvent.category}</span>
-                              <span className="text-xs font-bold bg-secondary/20 text-secondary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md flex items-center gap-1"><Clock className="w-3 h-3"/> {featuredEvent.date}</span>
+                              <span className="text-xs font-bold bg-secondary/20 text-secondary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md flex items-center gap-1"><Clock className="w-3 h-3"/> {new Date(featuredEvent.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                             </div>
                             <div>
                               <h3 className="text-2xl md:text-3xl font-display font-black text-foreground tracking-tight group-hover:text-primary transition-colors">{featuredEvent.title}</h3>
@@ -941,7 +940,7 @@ export const StudentDashboard: React.FC = () => {
                         {/* Date and Venue Row */}
                         <div className="flex justify-between items-center text-xs text-muted-foreground mb-3 font-medium">
                           <span className="flex items-center gap-1.5 text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">
-                            <Clock className="w-3.5 h-3.5" /> {event.date}
+                            <Clock className="w-3.5 h-3.5" /> {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                           </span>
                           <span className="flex items-center gap-1.5 truncate max-w-[50%]">
                             <MapPin className="w-3.5 h-3.5 shrink-0" /> <span className="truncate">{event.venue}</span>
@@ -1012,7 +1011,7 @@ export const StudentDashboard: React.FC = () => {
                         <h4 className="font-bold text-sm text-foreground truncate">{event.title}</h4>
                         <p className="text-[10px] text-muted-foreground mt-1 truncate">{event.category} &bull; {event.difficultyLevel || 'All Levels'}</p>
                         <div className="mt-3 pt-3 border-t border-border/50 flex items-center justify-between">
-                           <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1"><CalendarIcon className="w-3 h-3"/> {event.date ? new Date(event.date).toLocaleDateString(undefined, {month:'short', day:'numeric'}) : 'TBA'}</span>
+                           <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1"><CalendarIcon className="w-3 h-3"/> {event.date ? new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}</span>
                            <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-md">View</span>
                         </div>
                       </div>
@@ -1057,7 +1056,7 @@ export const StudentDashboard: React.FC = () => {
                         </div>
                         <h4 className="text-base font-bold text-foreground">{reg.eventId?.title}</h4>
                         <span className="text-xs text-muted-foreground block mt-1 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {reg.eventId?.venue}</span>
-                        <span className="text-xs text-muted-foreground block mt-0.5">Date: {reg.eventId?.date} | Time: {reg.eventId?.time}</span>
+                        <span className="text-xs text-muted-foreground block mt-0.5">Date: {reg.eventId?.date ? new Date(reg.eventId.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : ''} | Time: {reg.eventId?.time}</span>
                       </div>
 
                       <div className="mt-6 pt-4 border-t border-border/50 flex flex-wrap gap-2 justify-between items-center">
@@ -1758,7 +1757,7 @@ export const StudentDashboard: React.FC = () => {
               </div>
               <div className="space-y-1.5">
                 <span className="text-neutral-500 block text-[10px] uppercase font-black tracking-widest">Date & Time</span>
-                <span className="font-bold text-white flex items-center gap-2"><CalendarIcon className="w-4 h-4 text-fuchsia-400" /> {selectedEvent.date} at {selectedEvent.time}</span>
+                <span className="font-bold text-white flex items-center gap-2"><CalendarIcon className="w-4 h-4 text-fuchsia-400" /> {new Date(selectedEvent.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} at {selectedEvent.time}</span>
               </div>
               <div className="space-y-1.5">
                 <span className="text-neutral-500 block text-[10px] uppercase font-black tracking-widest">Remaining Seats</span>
@@ -1862,7 +1861,7 @@ export const StudentDashboard: React.FC = () => {
               <span className="text-xl font-bold text-emerald-400 font-mono my-4 block">{selectedPass.registrationId}</span>
               
               <span className="text-xs font-bold text-foreground block">{selectedPass.eventId?.title || 'Event details'}</span>
-              <span className="text-[10px] text-muted-foreground block mt-1">Date: {selectedPass.eventId?.date} | Place: {selectedPass.eventId?.venue}</span>
+              <span className="text-[10px] text-muted-foreground block mt-1">Date: {selectedPass.eventId?.date ? new Date(selectedPass.eventId.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : ''} | Place: {selectedPass.eventId?.venue}</span>
               
               {selectedPass.eventId?.externalLink && canAccessLink(selectedPass.eventId) && (
                 <div className="mt-4 pt-4 border-t border-dashed border-muted">

@@ -306,7 +306,7 @@ export const LandingPage: React.FC = () => {
                       </div>
                     ) : (
                       <div className="flex justify-between items-center text-xs text-muted-foreground">
-                        <span className="font-medium">Date: {event.date}</span>
+                        <span className="font-medium">Date: {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                         {event.isRegistrationOpen === false ? (
                           <span className="text-red-500 font-bold flex items-center gap-1">
                             Registration Closed
