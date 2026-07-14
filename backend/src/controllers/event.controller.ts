@@ -48,7 +48,7 @@ export const getEvents = async (req: Request, res: Response) => {
         ];
       }
 
-      events = await Event.find(query).sort({ date: 1 });
+      events = await Event.find(query).sort({ date: 1 }).lean();
     } else {
       events = MockDB.getEvents();
 
@@ -113,7 +113,7 @@ export const getEventById = async (req: Request, res: Response) => {
     let event = null;
 
     if (isMongoConnected()) {
-      event = await Event.findById(id);
+      event = await Event.findById(id).lean();
     } else {
       event = MockDB.findEventById(id);
     }

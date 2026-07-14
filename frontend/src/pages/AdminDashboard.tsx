@@ -97,7 +97,8 @@ export const AdminDashboard: React.FC = () => {
     queryFn: async () => {
       const res = await api.get('/registrations/dashboard-stats');
       return res.data.data;
-    }
+    },
+    staleTime: 5 * 60 * 1000
   });
 
   // Fetch Admin Events list
@@ -106,7 +107,8 @@ export const AdminDashboard: React.FC = () => {
     queryFn: async () => {
       const res = await api.get('/events');
       return res.data.data;
-    }
+    },
+    staleTime: 5 * 60 * 1000
   });
 
   // Fetch Registrations Table List
@@ -115,7 +117,8 @@ export const AdminDashboard: React.FC = () => {
     queryFn: async () => {
       const res = await api.get(`/registrations?status=${statusFilter}&search=${searchQuery}`);
       return res.data.data;
-    }
+    },
+    staleTime: 5 * 60 * 1000
   });
 
   // Fetch registrations for scanner autocomplete
@@ -136,7 +139,8 @@ export const AdminDashboard: React.FC = () => {
       const res = await api.get('/auth/members');
       return res.data.data;
     },
-    enabled: user?.role === 'super-admin'
+    enabled: user?.role === 'super-admin',
+    staleTime: 5 * 60 * 1000
   });
   
   const [memberYearFilter, setMemberYearFilter] = useState('');
@@ -148,7 +152,8 @@ export const AdminDashboard: React.FC = () => {
       const res = await api.get('/auth/coordinators');
       return res.data.data;
     },
-    enabled: user?.role === 'super-admin'
+    enabled: user?.role === 'super-admin',
+    staleTime: 5 * 60 * 1000
   });
 
   // Fetch Announcements
@@ -157,7 +162,8 @@ export const AdminDashboard: React.FC = () => {
     queryFn: async () => {
       const res = await api.get('/announcements');
       return res.data.data;
-    }
+    },
+    staleTime: 5 * 60 * 1000
   });
 
   const createAnnouncementMutation = useMutation({
@@ -190,7 +196,8 @@ export const AdminDashboard: React.FC = () => {
     queryFn: async () => {
       const res = await api.get('/support');
       return res.data.data;
-    }
+    },
+    staleTime: 5 * 60 * 1000
   });
 
   const updateSupportTicketMutation = useMutation({

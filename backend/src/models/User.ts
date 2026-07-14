@@ -50,4 +50,7 @@ const userSchema = new Schema<IUser>({
   plaintextPassword: { type: String }
 });
 
+userSchema.index({ role: 1 });
+userSchema.index({ department: 1 });
+
 export const User = model<IUser>('User', userSchema);

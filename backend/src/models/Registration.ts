@@ -40,4 +40,7 @@ const registrationSchema = new Schema<IRegistration>({
   createdAt: { type: Date, default: Date.now }
 });
 
+registrationSchema.index({ eventId: 1, studentId: 1 });
+registrationSchema.index({ status: 1 });
+
 export const Registration = model<IRegistration>('Registration', registrationSchema);

@@ -86,4 +86,7 @@ const eventSchema = new Schema<IEvent>({
   createdAt: { type: Date, default: Date.now }
 });
 
+eventSchema.index({ date: 1, isPublished: 1, isArchived: 1 });
+eventSchema.index({ category: 1, difficultyLevel: 1 });
+
 export const Event = model<IEvent>('Event', eventSchema);

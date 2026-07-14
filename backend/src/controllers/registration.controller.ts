@@ -153,7 +153,7 @@ export const getMyRegistrations = async (req: AuthRequest, res: Response) => {
     let registrations = [];
 
     if (isMongoConnected()) {
-      registrations = await Registration.find({ studentId }).populate('eventId').sort({ createdAt: -1 });
+      registrations = await Registration.find({ studentId }).populate('eventId').sort({ createdAt: -1 }).lean();
     } else {
       registrations = MockDB.getRegistrations()
         .filter(r => r.studentId === studentId)
@@ -189,7 +189,8 @@ export const getRegistrations = async (req: AuthRequest, res: Response) => {
       registrations = await Registration.find(query)
         .populate('studentId')
         .populate('eventId')
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1 })
+        .lean();
 
       if (search) {
         const keyword = (search as string).toLowerCase();
@@ -750,22 +751,42 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
     let registrationsByDay: any = {};
 
     if (isMongoConnected()) {
-      totalStudents = await User.countDocuments({ role: 'student' });
-      totalEvents = await Event.countDocuments({});
-      totalRegistrations = await Registration.countDocuments({});
-      attendedCount = await Registration.countDocuments({ attended: true });
+      const [
+        studentsCount,
+        eventsCount,
+        regsCount,
+        attended,
+        deptAgg,
+        regAgg
+      ] = await Promise.all([
+        User.countDocuments({ role: 'student' }),
+        Event.countDocuments({}),
+        Registration.countDocuments({}),
+        Registration.countDocuments({ attended: true }),
+        User.aggregate([
+          { $match: { role: 'student', department: { $exists: true, $ne: '' } } },
+          { $group: { _id: '$department', count: { $sum: 1 } } }
+        ]),
+        Registration.aggregate([
+          { $group: { 
+              _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }, 
+              count: { $sum: 1 } 
+            } 
+          }
+        ])
+      ]);
 
-      const allUsers = await User.find({ role: 'student' });
-      allUsers.forEach(u => {
-        if (u.department) {
-          departmentBreakdown[u.department] = (departmentBreakdown[u.department] || 0) + 1;
-        }
+      totalStudents = studentsCount;
+      totalEvents = eventsCount;
+      totalRegistrations = regsCount;
+      attendedCount = attended;
+
+      deptAgg.forEach((d: any) => {
+        departmentBreakdown[d._id] = d.count;
       });
 
-      const allRegs = await Registration.find({});
-      allRegs.forEach(r => {
-        const day = new Date(r.createdAt).toISOString().split('T')[0];
-        registrationsByDay[day] = (registrationsByDay[day] || 0) + 1;
+      regAgg.forEach((r: any) => {
+        registrationsByDay[r._id] = r.count;
       });
     } else {
       const students = MockDB.getUsers().filter(u => u.role === 'student');
