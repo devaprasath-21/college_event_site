@@ -6,20 +6,14 @@ import {
   scanAttendance, 
   updateRegistrationStatus, 
   submitFeedback, 
-  downloadCertificate, 
-  verifyCertificate, 
   getDashboardStats,
-  bulkVerifyAttendance,
-  deleteRegistration,
-  issueCertificate
+  deleteRegistration
 } from '../controllers/registration.controller';
 import { protect, authorize } from '../middlewares/auth';
 
 const router = Router();
 
-// Public routes for certificate downloading & lookup verification
-router.get('/:id/certificate', downloadCertificate);
-router.get('/verify/:regId', verifyCertificate);
+
 
 // Protected routes
 router.post('/', protect, createRegistration);
@@ -32,7 +26,6 @@ router.post('/scan', protect, authorize('super-admin', 'event-coordinator', 'vol
 router.patch('/:id', protect, authorize('super-admin', 'event-coordinator'), updateRegistrationStatus);
 router.delete('/:id', protect, authorize('super-admin', 'event-coordinator'), deleteRegistration);
 router.get('/dashboard-stats', protect, authorize('super-admin', 'event-coordinator'), getDashboardStats);
-router.post('/bulk-verify', protect, authorize('super-admin', 'event-coordinator'), bulkVerifyAttendance);
-router.patch('/:id/issue', protect, authorize('super-admin', 'event-coordinator'), issueCertificate);
+
 
 export default router;

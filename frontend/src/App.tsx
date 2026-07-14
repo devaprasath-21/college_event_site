@@ -10,7 +10,7 @@ import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { StudentDashboard } from './pages/StudentDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
-import { VerifyCertificatePage } from './pages/VerifyCertificatePage';
+
 import { SSOLoginPage } from './pages/SSOLoginPage';
 
 const queryClient = new QueryClient();
@@ -56,7 +56,7 @@ export const App: React.FC = () => {
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/sso" element={<SSOLoginPage />} />
-                  <Route path="/verify/:regId" element={<VerifyCertificatePage />} />
+
 
                   {/* Student Dashboard (Role: student) */}
                   <Route 

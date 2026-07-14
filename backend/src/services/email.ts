@@ -119,32 +119,3 @@ export const getCancellationTemplate = (studentName: string, eventTitle: string)
   `;
 };
 
-export const getCertificateReadyTemplate = (studentName: string, eventTitle: string) => {
-  return `
-    <div style="font-family: Arial, sans-serif; background-color: #f3f4f6; padding: 20px; color: #1f2937;">
-      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-        <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; text-align: center; color: #ffffff;">
-          <h1 style="margin: 0; font-size: 24px; font-weight: bold;">CampusHub</h1>
-          <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Congratulations! Your Certificate is Ready</p>
-        </div>
-        <div style="padding: 30px;">
-          <h2 style="margin-top: 0; color: #111827; font-size: 20px;">Hi ${studentName},</h2>
-          <p style="font-size: 15px; line-height: 1.6;">Your participation certificate for <strong>${eventTitle}</strong> is now available for download.</p>
-          
-          <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 15px; border-radius: 4px; margin: 20px 0;">
-            <p style="margin: 0; font-size: 14px; color: #065f46;"><strong>Status:</strong> Participation Verified & Certificate Generated</p>
-          </div>
-
-          <p style="font-size: 14px; line-height: 1.5; color: #4b5563;">You can view and download your verified PDF certificate from the "My Certificates" section of your student dashboard.</p>
-          
-          <div style="text-align: center; margin-top: 30px;">
-            <a href="http://localhost:5173/dashboard" style="background-color: #10b981; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 14px; display: inline-block;">Download Certificate</a>
-          </div>
-        </div>
-        <div style="background-color: #f3f4f6; padding: 15px 30px; text-align: center; font-size: 12px; color: #9ca3af;">
-          &copy; 2026 CampusHub Platform. All rights reserved.
-        </div>
-      </div>
-    </div>
-  `;
-};

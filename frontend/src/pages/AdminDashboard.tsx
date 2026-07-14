@@ -19,7 +19,7 @@ export const AdminDashboard: React.FC = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'events' | 'registrations' | 'scanner' | 'certificates' | 'winners' | 'members' | 'coordinators' | 'profile' | 'announcements' | 'support'>(
+  const [activeTab, setActiveTab] = useState<'overview' | 'events' | 'registrations' | 'scanner' | 'winners' | 'members' | 'coordinators' | 'profile' | 'announcements' | 'support'>(
     user?.role === 'super-admin' ? 'overview' : 'events'
   );
   
@@ -87,9 +87,8 @@ export const AdminDashboard: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [eventFilter, setEventFilter] = useState('');
 
-  // ── Certificate Manager State ──
+  // ── Winner Manager State ──
   const [certSelectedEventId, setCertSelectedEventId] = useState<string>('');
-  const [certPreviewReg, setCertPreviewReg] = useState<any | null>(null);
 
   // Fetch Dashboard Stats
   const { data: stats, isLoading: statsLoading } = useQuery({
@@ -271,7 +270,7 @@ export const AdminDashboard: React.FC = () => {
     };
   }, [socket]);
 
-  // Load existing winners when selecting an event in Certificate Manager
+  // Load existing winners when selecting an event in Winner Manager
   useEffect(() => {
     if (certSelectedEventId && adminEvents) {
       const selected = adminEvents.find((e: any) => e._id === certSelectedEventId);
@@ -349,16 +348,7 @@ export const AdminDashboard: React.FC = () => {
     }
   });
 
-  // Issue single certificate mutation
-  const issueCertificateMutation = useMutation({
-    mutationFn: async (registrationId: string) => {
-      const res = await api.patch(`/registrations/${registrationId}/issue`);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-registrations'] });
-    }
-  });
+
 
   // Toggle Registration Open/Close mutation
   const toggleRegistrationMutation = useMutation({
@@ -409,21 +399,7 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
-  // Bulk Verify Attendance & Distribute Certificates mutation
-  const bulkVerifyMutation = useMutation({
-    mutationFn: async (eventId: string) => {
-      const res = await api.post('/registrations/bulk-verify', { eventId });
-      return res.data;
-    },
-    onSuccess: (data: any) => {
-      queryClient.invalidateQueries({ queryKey: ['admin-events'] });
-      queryClient.invalidateQueries({ queryKey: ['admin-stats'] });
-      alert(data.message || 'Certificates distributed to all attendees successfully.');
-    },
-    onError: (err: any) => {
-      alert(err.response?.data?.message || 'Failed to distribute certificates.');
-    }
-  });
+
 
   const filteredScannerStudents = useMemo(() => {
     if (!scannerEventId || !scanCode || scanCode.length < 2) return [];
@@ -651,7 +627,7 @@ export const AdminDashboard: React.FC = () => {
             { id: 'events', label: 'Manage Events', icon: Calendar },
             { id: 'registrations', label: 'Registered Events', icon: CheckSquare },
             { id: 'scanner', label: 'Attendance Check-in', icon: ClipboardCheck },
-            { id: 'winners', label: 'Winners & Certificates', icon: Trophy, hideOnMobile: true },
+            { id: 'winners', label: 'Winners', icon: Trophy, hideOnMobile: true },
             { id: 'announcements', label: 'Manage Announcements', icon: Megaphone, adminOnly: true, hideOnMobile: true },
             { id: 'support', label: 'Support Tickets', icon: AlertTriangle, adminOnly: true, hideOnMobile: true },
             { id: 'members', label: 'Registered Accounts', icon: Users, adminOnly: true },
@@ -1597,7 +1573,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 6: PUBLISH WINNERS & CERTIFICATES */}
+          {/* TAB 6: PUBLISH WINNERS */}
           {activeTab === 'winners' && (() => {
             const selectedEvent = adminEvents?.find((e: any) => e._id === certSelectedEventId);
             const eventRegs = allRegistrations?.filter((r: any) => r.eventId?._id === certSelectedEventId) || [];
@@ -1608,9 +1584,9 @@ export const AdminDashboard: React.FC = () => {
               <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-xl font-bold text-foreground tracking-tight">Winners & Certificates</h2>
+                    <h2 className="text-xl font-bold text-foreground tracking-tight">Winners</h2>
                     <p className="text-sm text-muted-foreground mt-0.5">
-                      Select an event to publish winners and manage student certificates.
+                      Select an event to publish winners.
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -1789,133 +1765,7 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  {/* --- CERTIFICATES UI FOR MOBILE/DESKTOP --- */}
-                  <div className="border border-border rounded-2xl overflow-hidden bg-card mt-8">
-                      <div className="p-6 border-b border-border bg-muted/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div>
-                           <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                             <Award className="w-5 h-5 text-amber-500" /> Certificates Manager
-                           </h3>
-                           <p className="text-xs text-muted-foreground mt-1.5 flex flex-wrap gap-2 items-center">
-                             <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">{eventRegs.length} Booked</span>
-                             <span className="bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full font-medium">{attendedRegs.length} Attended</span>
-                             <span className="bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full font-medium">{certifiedCount} Issued</span>
-                           </p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            if (window.confirm('Issue certificates to all ' + attendedRegs.length + ' attendees?')) {
-                              bulkVerifyMutation.mutate(certSelectedEventId);
-                            }
-                          }}
-                          disabled={bulkVerifyMutation.isPending || attendedRegs.length === 0}
-                          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-xl transition shadow-md disabled:opacity-50 w-full sm:w-auto"
-                        >
-                          <ShieldCheck className="w-4 h-4" />
-                          {bulkVerifyMutation.isPending ? 'Issuing...' : 'Issue All'}
-                        </button>
-                      </div>
 
-                      {eventRegs.length === 0 ? (
-                        <div className="py-12 text-center text-muted-foreground">
-                          <Users className="w-10 h-10 mx-auto opacity-20 mb-3" />
-                          <p className="text-sm">No students registered for this event yet.</p>
-                        </div>
-                      ) : (
-                        <div className="border border-white/5 bg-white/[0.01] rounded-2xl overflow-hidden">
-                          <div className="overflow-x-auto">
-                            <table className="w-full text-xs text-left border-collapse">
-                              <thead>
-                                <tr className="bg-muted/30 border-b border-white/5 font-bold text-muted-foreground">
-                                  <th className="p-4">Student Info</th>
-                                  <th className="p-4">Reg. Number</th>
-                                  <th className="p-4 text-center">Attendance</th>
-                                  <th className="p-4 text-center">Status</th>
-                                  <th className="p-4 text-center">Actions</th>
-                                </tr>
-                              </thead>
-                              <tbody className="divide-y divide-border/60">
-                                {eventRegs.map((reg: any) => {
-                                  const s = reg.studentId;
-                                  return (
-                                    <tr key={reg._id} className="hover:bg-muted/10 transition-colors">
-                                      <td className="p-4">
-                                        <div className="flex items-center gap-3 min-w-[150px]">
-                                          <div className="w-9 h-9 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0 shadow-sm transition-transform">
-                                            {(s?.username || 'S').charAt(0).toUpperCase()}
-                                          </div>
-                                          <div className="flex-1 min-w-0">
-                                            <p className="font-bold text-foreground text-sm truncate">{s?.name || s?.username || '—'}</p>
-                                            <p className="text-xs text-muted-foreground truncate">{s?.email || '—'}</p>
-                                          </div>
-                                        </div>
-                                      </td>
-                                      <td className="p-4">
-                                        <span className="font-mono text-foreground font-semibold bg-muted/50 px-2 py-1 rounded-md">{s?.registrationNumber || <span className="text-muted-foreground italic">Not set</span>}</span>
-                                      </td>
-                                      <td className="p-4 text-center">
-                                        {reg.attended ? (
-                                          <span className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold text-xs bg-emerald-500/10 px-2 py-1 rounded-md">
-                                            <Check className="w-3.5 h-3.5" /> Yes
-                                          </span>
-                                        ) : (
-                                          <span className="text-muted-foreground text-xs bg-muted/50 px-2 py-1 rounded-md">No</span>
-                                        )}
-                                      </td>
-                                      <td className="p-4 text-center">
-                                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
-                                          reg.certificateIssued
-                                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                            : reg.attended
-                                            ? 'bg-primary/10 text-primary border border-primary/20'
-                                            : 'bg-muted text-muted-foreground'
-                                        }`}>
-                                          {reg.certificateIssued ? 'Issued' : reg.attended ? 'Eligible' : 'No'}
-                                        </span>
-                                      </td>
-                                      <td className="p-4 text-center">
-                                        <div className="flex items-center justify-center gap-2">
-                                          <button
-                                            onClick={() => setCertPreviewReg({ reg, student: s, event: selectedEvent })}
-                                            className="p-2 rounded-lg bg-secondary/10 border border-secondary/20 text-secondary hover:bg-secondary/20 transition clickable"
-                                            title="Preview Certificate"
-                                          >
-                                            <Camera className="w-4 h-4 transition-transform" />
-                                          </button>
-                                          {reg.attended && !reg.certificateIssued && (
-                                            <button
-                                              onClick={() => issueCertificateMutation.mutate(reg._id)}
-                                              disabled={issueCertificateMutation.isPending}
-                                              className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold shadow-md hover:bg-primary/90 transition clickable disabled:opacity-50"
-                                            >
-                                              Issue
-                                            </button>
-                                          )}
-                                          {reg.attended && reg.certificateIssued && (
-                                            <>
-                                              <span className="text-[11px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">Issued</span>
-                                              <a
-                                                href={`http://localhost:5000/api/registrations/${reg._id}/certificate`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="p-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition clickable flex items-center justify-center"
-                                                title="Download Certificate PDF"
-                                              >
-                                                <Download className="w-4 h-4 transition-transform" />
-                                              </a>
-                                            </>
-                                          )}
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      )}
-                  </div>
                   </>
                 )}
               </div>

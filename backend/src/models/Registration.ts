@@ -8,7 +8,7 @@ export interface IRegistration {
   qrCodeUrl?: string; // QR code image URL or base64 representation
   attended: boolean;
   attendedAt?: Date;
-  certificateIssued?: boolean;
+
   feedback?: {
     rating: number;
     comment: string;
@@ -30,7 +30,7 @@ const registrationSchema = new Schema<IRegistration>({
   qrCodeUrl: { type: String },
   attended: { type: Boolean, default: false },
   attendedAt: { type: Date },
-  certificateIssued: { type: Boolean, default: false },
+
   feedback: {
     rating: { type: Number, min: 1, max: 5 },
     comment: { type: String },

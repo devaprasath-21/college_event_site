@@ -161,7 +161,7 @@ export const LandingPage: React.FC = () => {
         </h1>
 
         <p className="mt-6 text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
-          The college event registration platform. Track achievements, earn rankings, and claim certificates.
+          The college event registration platform. Track achievements, and earn rankings.
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
