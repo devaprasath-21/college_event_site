@@ -186,8 +186,8 @@ export const getRegistrations = async (req: AuthRequest, res: Response) => {
       if (status) query.status = status;
 
       registrations = await Registration.find(query)
-        .populate('studentId')
-        .populate('eventId')
+        .populate('studentId', '-password')
+        .populate('eventId', '-poster -gallery -rules -requirements')
         .sort({ createdAt: -1 })
         .lean();
 

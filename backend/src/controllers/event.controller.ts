@@ -51,7 +51,7 @@ export const getEvents = async (req: Request, res: Response) => {
         ];
       }
 
-      events = await Event.find(query).sort({ date: 1 }).lean();
+      events = await Event.find(query).select('-gallery -rules -requirements').sort({ date: 1 }).lean();
     } else {
       events = MockDB.getEvents();
 
