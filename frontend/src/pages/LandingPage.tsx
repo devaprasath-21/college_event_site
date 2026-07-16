@@ -48,6 +48,9 @@ export const LandingPage: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
+  // Fullscreen Poster Viewer State
+  const [viewPosterUrl, setViewPosterUrl] = useState<string | null>(null);
+  const [posterZoom, setPosterZoom] = useState(1);
 
   // Campus Visuals Carousel state
   const campusSlides = [
@@ -338,9 +341,9 @@ export const LandingPage: React.FC = () => {
                       <h3 className="text-sm font-bold text-white mb-2 line-clamp-2">{event.title}</h3>
                       <div className="flex gap-2 items-center">
                         <span className="text-[10px] font-bold bg-primary/20 text-primary px-2.5 py-1 rounded-md">{event.category}</span>
-                        <a href={event.poster} target="_blank" rel="noreferrer" className="text-[10px] text-white hover:text-primary transition bg-black/50 p-2 rounded-full ml-auto cursor-pointer flex items-center justify-center">
+                        <button onClick={() => setViewPosterUrl(event.poster)} className="text-[10px] text-white hover:text-primary transition bg-black/50 p-2 rounded-full ml-auto cursor-pointer flex items-center justify-center">
                           <Image className="w-4 h-4" />
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -374,9 +377,9 @@ export const LandingPage: React.FC = () => {
                             Register Now <ArrowUpRight className="w-4 h-4" />
                           </span>
                        )}
-                       <a href={event.poster} target="_blank" rel="noreferrer" className="text-xs text-muted-foreground hover:text-primary transition flex items-center gap-1.5 bg-muted px-3 py-1.5 rounded-lg">
+                       <button onClick={() => setViewPosterUrl(event.poster)} className="text-xs text-muted-foreground hover:text-primary transition flex items-center gap-1.5 bg-muted px-3 py-1.5 rounded-lg">
                           <Image className="w-4 h-4" /> View Full
-                       </a>
+                       </button>
                     </div>
                   </div>
 
@@ -407,6 +410,32 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* FULLSCREEN POSTER VIEWER MODAL */}
+      {viewPosterUrl && (
+        <div className="fixed inset-0 w-full h-full bg-black/95 backdrop-blur-md flex flex-col items-center justify-center z-[99999] animate-in fade-in duration-200 p-4">
+          <div className="absolute top-6 right-6 flex gap-4 z-10">
+            <button onClick={() => setPosterZoom(prev => Math.min(prev + 0.5, 3))} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors shadow-lg" title="Zoom In">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </button>
+            <button onClick={() => setPosterZoom(prev => Math.max(prev - 0.5, 0.5))} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors shadow-lg" title="Zoom Out">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </button>
+            <button onClick={() => { setViewPosterUrl(null); setPosterZoom(1); }} className="p-3 bg-white/10 hover:bg-red-500/80 rounded-full text-white transition-colors shadow-lg" title="Close">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+          <div className="overflow-auto w-full h-full flex items-center justify-center custom-scrollbar" onClick={(e) => { if(e.target === e.currentTarget) { setViewPosterUrl(null); setPosterZoom(1); }}}>
+            <img 
+              src={viewPosterUrl} 
+              alt="Event Poster Full View" 
+              className="max-w-full max-h-[90vh] object-contain transition-transform duration-200" 
+              style={{ transform: `scale(${posterZoom})`, transformOrigin: 'center' }} 
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
