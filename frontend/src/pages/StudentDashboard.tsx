@@ -159,7 +159,7 @@ export const StudentDashboard: React.FC = () => {
     : events;
 
   // Hero Events State (must be at top level, not inside conditional render)
-  const heroEvents = (events || []).slice(0, 3);
+  const heroEvents = (events || []).filter((e: any) => !e.isCompleted).slice(0, 3);
   const [heroIndex, setHeroIndex] = React.useState(0);
   
   React.useEffect(() => {
@@ -567,7 +567,7 @@ export const StudentDashboard: React.FC = () => {
 
                     {/* Meta info row */}
                     <div className="flex items-center gap-5 flex-wrap text-muted-foreground text-xs font-medium">
-                      <span className="text-white font-bold flex items-center gap-1.5 opacity-90"><CalendarIcon className="w-4 h-4" /> 
+                      <span className="text-foreground font-bold flex items-center gap-1.5 opacity-90"><CalendarIcon className="w-4 h-4" /> 
                         {new Date(heroEvent.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                       </span>
                       {heroEvent.time && (
