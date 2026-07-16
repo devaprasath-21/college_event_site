@@ -10,44 +10,12 @@ import {
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
-export const LandingPage: React.FC = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated, user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
-
-  // Typing Text Animation state
+const TypingEffect: React.FC = () => {
   const typingWords = ['Hackathons', 'Tech Symposia', 'Coding Contests', 'Cultural Fests', 'Art Expos'];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Campus Visuals Carousel state
-  const campusSlides = [
-    { src: '/slide1.jpg', title: 'Information Technology Department', desc: 'Department of Information Technology' }
-  ];
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % campusSlides.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Statistics counters state
-  const [stats, setStats] = useState({ students: 0, events: 0, venues: 0 });
-
-  // Fetch Published Events using React Query
-  const { data: eventsData, isLoading } = useQuery({
-    queryKey: ['landing-events'],
-    queryFn: async () => {
-      const res = await api.get('/events?status=published');
-      return res.data.data;
-    },
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes to improve load time
-  });
-
-  // Typing effect logic
   useEffect(() => {
     let timer: any;
     const currentWord = typingWords[currentWordIndex];
@@ -72,29 +40,41 @@ export const LandingPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [displayedText, isDeleting, currentWordIndex]);
 
-  // Statistics counting logic
-  useEffect(() => {
-    const target = { students: 1200, events: 45, venues: 8 };
-    const duration = 2000; // 2 seconds
-    const intervalTime = 50;
-    const steps = duration / intervalTime;
-    
-    let step = 0;
-    const timer = setInterval(() => {
-      step++;
-      setStats({
-        students: Math.min(target.students, Math.round((target.students / steps) * step)),
-        events: Math.min(target.events, Math.round((target.events / steps) * step)),
-        venues: Math.min(target.venues, Math.round((target.venues / steps) * step)),
-      });
-      
-      if (step >= steps) {
-        clearInterval(timer);
-      }
-    }, intervalTime);
+  return <>{displayedText}</>;
+};
 
+export const LandingPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+
+
+  // Campus Visuals Carousel state
+  const campusSlides = [
+    { src: '/slide1.jpg', title: 'Information Technology Department', desc: 'Department of Information Technology' }
+  ];
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % campusSlides.length);
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
+
+
+
+  // Fetch Published Events using React Query
+  const { data: eventsData, isLoading } = useQuery({
+    queryKey: ['landing-events'],
+    queryFn: async () => {
+      const res = await api.get('/events?status=published');
+      return res.data.data;
+    },
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes to improve load time
+  });
+
+
 
   return (
     <div className="min-h-screen w-full relative bg-background overflow-x-hidden">
@@ -155,7 +135,7 @@ export const LandingPage: React.FC = () => {
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-black tracking-tight text-foreground max-w-4xl leading-[1.1]">
           Discover and Experience <br />
           <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent drop-shadow-sm">
-            {displayedText}
+            <TypingEffect />
           </span>
           <span className="text-secondary font-light animate-pulse">|</span>
         </h1>

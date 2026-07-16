@@ -31,6 +31,7 @@ export interface IEvent {
   isPublished: boolean;
   isArchived: boolean;
   isRegistrationOpen: boolean;
+  isCompleted: boolean;
   gallery: string[];
   winners?: {
     place: '1st' | '2nd' | '3rd';
@@ -76,6 +77,7 @@ const eventSchema = new Schema<IEvent>({
   isPublished: { type: Boolean, default: false },
   isArchived: { type: Boolean, default: false },
   isRegistrationOpen: { type: Boolean, default: true },
+  isCompleted: { type: Boolean, default: false },
   gallery: [{ type: String }],
   winners: [{
     place: { type: String, enum: ['1st', '2nd', '3rd'], required: true },

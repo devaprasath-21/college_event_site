@@ -31,6 +31,7 @@ export const getEvents = async (req: Request, res: Response) => {
       if (status === 'published') {
         query.isPublished = true;
         query.isArchived = false;
+        query.isCompleted = false;
       } else if (status === 'archived') {
         query.isArchived = true;
       } else if (status === 'draft') {
@@ -64,7 +65,7 @@ export const getEvents = async (req: Request, res: Response) => {
 
       // Filter status
       if (status === 'published') {
-        events = events.filter(e => e.isPublished && !e.isArchived);
+        events = events.filter(e => e.isPublished && !e.isArchived && !e.isCompleted);
       } else if (status === 'archived') {
         events = events.filter(e => e.isArchived);
       } else if (status === 'draft') {
@@ -161,6 +162,7 @@ export const createEvent = async (req: AuthRequest, res: Response) => {
       isPublished: eventDetails.isPublished !== undefined ? eventDetails.isPublished : false,
       isRegistrationOpen: eventDetails.isRegistrationOpen !== undefined ? eventDetails.isRegistrationOpen : true,
       isArchived: false,
+      isCompleted: false,
       gallery: []
     };
 
@@ -256,6 +258,7 @@ export const duplicateEvent = async (req: AuthRequest, res: Response) => {
       studentCoordinator: sourceEvent.studentCoordinator,
       isPublished: false,
       isArchived: false,
+      isCompleted: false,
       isRegistrationOpen: sourceEvent.isRegistrationOpen,
       gallery: []
     };

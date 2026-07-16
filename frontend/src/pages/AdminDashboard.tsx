@@ -81,6 +81,7 @@ export const AdminDashboard: React.FC = () => {
   const [studentCoordinatorEmail, setStudentCoordinatorEmail] = useState('student.admin@srm.edu');
   const [studentCoordinatorPhone, setStudentCoordinatorPhone] = useState('9876543210');
   const [eventRegistrationOpen, setEventRegistrationOpen] = useState(true);
+  const [eventCompleted, setEventCompleted] = useState(false);
 
   // Search/Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -132,7 +133,7 @@ export const AdminDashboard: React.FC = () => {
   });
 
   // Fetch All Registered Members
-  const { data: allMembers, isLoading: membersLoading } = useQuery({
+  const { data: allMembers, isPending: membersLoading } = useQuery({
     queryKey: ['admin-members'],
     queryFn: async () => {
       const res = await api.get('/auth/members');
@@ -145,7 +146,7 @@ export const AdminDashboard: React.FC = () => {
   const [memberYearFilter, setMemberYearFilter] = useState('');
 
   // Fetch All Coordinators
-  const { data: allCoordinators, isLoading: coordinatorsLoading } = useQuery({
+  const { data: allCoordinators, isPending: coordinatorsLoading } = useQuery({
     queryKey: ['admin-coordinators'],
     queryFn: async () => {
       const res = await api.get('/auth/coordinators');
@@ -364,6 +365,20 @@ export const AdminDashboard: React.FC = () => {
     }
   });
 
+  // Toggle Completed mutation
+  const toggleCompletedMutation = useMutation({
+    mutationFn: async (payload: { id: string, isCompleted: boolean }) => {
+      const res = await api.put(`/events/${payload.id}`, { isCompleted: payload.isCompleted });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-events'] });
+    },
+    onError: (err: any) => {
+      alert(err.response?.data?.message || 'Failed to update completion status.');
+    }
+  });
+
   // Announce Event Winners mutation
   const announceWinnersMutation = useMutation({
     mutationFn: async (payload: { title: string, content: string, eventId: string, winners: any[] }) => {
@@ -477,6 +492,7 @@ export const AdminDashboard: React.FC = () => {
     setStudentCoordinatorEmail(event.studentCoordinator?.email);
     setStudentCoordinatorPhone(event.studentCoordinator?.phone);
     setEventRegistrationOpen(event.isRegistrationOpen !== false);
+    setEventCompleted(event.isCompleted || false);
     setShowEventForm(true);
   };
 
@@ -499,6 +515,7 @@ export const AdminDashboard: React.FC = () => {
     setEventPrize('');
     setEventRules('');
     setEventRegistrationOpen(true);
+    setEventCompleted(false);
     setShowEventForm(false);
   };
 
@@ -544,7 +561,8 @@ export const AdminDashboard: React.FC = () => {
       facultyCoordinator: { name: coordinatorName, email: coordinatorEmail, phone: coordinatorPhone },
       studentCoordinator: { name: studentCoordinatorName, email: studentCoordinatorEmail, phone: studentCoordinatorPhone },
       isPublished: true, // Auto-publish for dashboard simplicity
-      isRegistrationOpen: eventRegistrationOpen
+      isRegistrationOpen: eventRegistrationOpen,
+      isCompleted: eventCompleted
     });
   };
 
@@ -946,6 +964,20 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                     </div>
 
+                    <div className="flex items-center gap-3 pt-4 border-t border-white/10">
+                      <input 
+                        type="checkbox" 
+                        id="eventCompleted" 
+                        checked={eventCompleted} 
+                        onChange={(e) => setEventCompleted(e.target.checked)}
+                        className="w-4 h-4 rounded border-muted bg-background text-primary focus:ring-primary"
+                      />
+                      <label htmlFor="eventCompleted" className="text-sm font-semibold text-foreground cursor-pointer">
+                        Mark Event as Completed
+                        <span className="block text-xs text-muted-foreground font-normal">Completed events are hidden from the main landing page to avoid confusion.</span>
+                      </label>
+                    </div>
+
                     <div className="flex gap-4 pt-4 border-t border-white/10">
                       <button type="button" onClick={resetEventForm} className="flex-1 py-3 text-sm font-bold bg-muted/50 text-foreground hover:bg-muted rounded-xl transition">
                         Cancel
@@ -978,11 +1010,13 @@ export const AdminDashboard: React.FC = () => {
                           <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap ${
                             !e.isPublished 
                               ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
-                              : e.isRegistrationOpen === false
-                                ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                                : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                              : e.isCompleted
+                                ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
+                                : e.isRegistrationOpen === false
+                                  ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                           }`}>
-                            {!e.isPublished ? 'Draft' : e.isRegistrationOpen === false ? 'Closed' : 'Live'}
+                            {!e.isPublished ? 'Draft' : e.isCompleted ? 'Completed' : e.isRegistrationOpen === false ? 'Closed' : 'Live'}
                           </span>
                         </div>
                         
@@ -997,8 +1031,8 @@ export const AdminDashboard: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Quick toggle for Registration */}
-                        <div className="mt-2 mb-4">
+                        {/* Quick toggle for Registration & Completion */}
+                        <div className="mt-2 mb-4 space-y-2">
                           {e.isRegistrationOpen !== false ? (
                             <button
                               type="button"
@@ -1018,6 +1052,27 @@ export const AdminDashboard: React.FC = () => {
                             >
                               <Check className="w-4 h-4" />
                               Open Registration
+                            </button>
+                          )}
+                          {!e.isCompleted ? (
+                            <button
+                              type="button"
+                              onClick={() => toggleCompletedMutation.mutate({ id: e._id, isCompleted: true })}
+                              disabled={toggleCompletedMutation.isPending}
+                              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all bg-purple-500/10 text-purple-400 hover:bg-purple-500 hover:text-white border border-purple-500/20 hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] clickable"
+                            >
+                              <CheckCircle2 className="w-4 h-4" />
+                              Mark Completed
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => toggleCompletedMutation.mutate({ id: e._id, isCompleted: false })}
+                              disabled={toggleCompletedMutation.isPending}
+                              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground border border-white/10 clickable"
+                            >
+                              <X className="w-4 h-4" />
+                              Undo Completion
                             </button>
                           )}
                         </div>
