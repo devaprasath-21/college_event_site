@@ -20,7 +20,7 @@ export const StudentDashboard: React.FC = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'discover' | 'registrations' | 'leaderboard' | 'calendar' | 'profile' | 'support'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'discover' | 'registrations' | 'certificates' | 'leaderboard' | 'calendar' | 'profile' | 'support'>('overview');
   
   // Real-time Announcements & Notifications State
   const [announcements, setAnnouncements] = useState<any[]>([]);
@@ -48,7 +48,8 @@ export const StudentDashboard: React.FC = () => {
   // Global Calendar State
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
 
-
+  // Certificate Viewer Modal State
+  const [viewCertificateReg, setViewCertificateReg] = useState<any | null>(null);
 
   // Poster Viewer Modal State
   const [viewPosterUrl, setViewPosterUrl] = useState<string | null>(null);
@@ -248,7 +249,7 @@ export const StudentDashboard: React.FC = () => {
       // Play brief notice sound or toast
     });
 
-    // Handle user-specific notifications
+    // Handle user-specific notifications (like certificate ready)
     socket.on('new_notification', (notif: any) => {
       setNotifications((prev) => [notif, ...prev]);
       setUnreadNotifsCount((prev) => prev + 1);
@@ -495,7 +496,7 @@ export const StudentDashboard: React.FC = () => {
             { id: 'overview', label: 'Home', icon: Home },
             { id: 'discover', label: 'Discover Events', icon: Search },
             { id: 'registrations', label: 'My Events', icon: CheckSquare },
-
+            { id: 'certificates', label: 'My Certificates', icon: ShieldCheck },
             { id: 'leaderboard', label: 'Leaderboard', icon: Award },
             { id: 'calendar', label: 'Calendar', icon: CalendarIcon },
             { id: 'support', label: 'Help & Support', icon: MessageSquare }
@@ -839,46 +840,147 @@ export const StudentDashboard: React.FC = () => {
                   <h3 className="text-sm font-bold text-primary tracking-widest uppercase mb-4 flex items-center gap-2">
                     <Sparkles className="w-4 h-4" /> Featured Event
                   </h3>
-                  <div className="space-y-6">
-                    {displayedEvents.map((event: any, idx: number) => {
-                      const gradients: Record<string, string> = {
-                        Technical:  'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
-                        Cultural:   'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)',
-                        Sports:     'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
-                        Workshop:   'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)',
-                      };
-                      const bg = gradients[event.category] || gradients['Technical'];
+                  {(() => {
+                    const featuredEvent = displayedEvents[0];
+                    const gradients: Record<string, string> = {
+                      Technical:  'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
+                      Cultural:   'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)',
+                      Sports:     'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
+                      Workshop:   'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)',
+                    };
+                    const bg = gradients[featuredEvent.category] || gradients['Technical'];
 
-                      return (
-                        <div 
-                          key={event._id}
-                          onClick={() => setSelectedEvent(event)}
-                          className="group relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl cursor-pointer w-full bg-card"
-                        >
-                          <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity" style={{ background: bg }} />
-                          <div className="relative p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
-                            <div className="flex-1 space-y-4">
-                              <div className="flex flex-wrap gap-2">
-                                <span className="text-xs font-bold bg-primary/20 text-primary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md">{event.category}</span>
-                                <span className="text-xs font-bold bg-secondary/20 text-secondary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md flex items-center gap-1"><Clock className="w-3 h-3"/> {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                              </div>
-                              <div>
-                                <h3 className="text-2xl md:text-3xl font-display font-black text-foreground tracking-tight group-hover:text-primary transition-colors">{event.title}</h3>
-                                <p className="text-muted-foreground mt-2 line-clamp-2 max-w-2xl">{event.description}</p>
-                              </div>
-                              <div className="flex items-center gap-4 text-sm font-semibold text-foreground/80">
-                                <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-primary" /> {event.venue}</span>
-                                <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-secondary" /> {event.availableSeats} Seats Left</span>
-                              </div>
+                    return (
+                      <div 
+                        onClick={() => setSelectedEvent(featuredEvent)}
+                        className="group relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl cursor-pointer w-full bg-card"
+                      >
+                        <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity" style={{ background: bg }} />
+                        <div className="relative p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                          <div className="flex-1 space-y-4">
+                            <div className="flex flex-wrap gap-2">
+                              <span className="text-xs font-bold bg-primary/20 text-primary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md">{featuredEvent.category}</span>
+                              <span className="text-xs font-bold bg-secondary/20 text-secondary px-3 py-1 rounded-md tracking-wide uppercase backdrop-blur-md flex items-center gap-1"><Clock className="w-3 h-3"/> {new Date(featuredEvent.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                             </div>
-                            <button className="px-6 py-3 bg-foreground text-background font-bold rounded-xl whitespace-nowrap shadow-xl hover:scale-105 transition-transform flex items-center gap-2">
-                              View Details <ArrowUpRight className="w-4 h-4" />
-                            </button>
+                            <div>
+                              <h3 className="text-2xl md:text-3xl font-display font-black text-foreground tracking-tight group-hover:text-primary transition-colors">{featuredEvent.title}</h3>
+                              <p className="text-muted-foreground mt-2 line-clamp-2 max-w-2xl">{featuredEvent.description}</p>
+                            </div>
+                            <div className="flex items-center gap-4 text-sm font-semibold text-foreground/80">
+                              <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-primary" /> {featuredEvent.venue}</span>
+                              <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-secondary" /> {featuredEvent.availableSeats} Seats Left</span>
+                            </div>
                           </div>
+                          <button className="px-6 py-3 bg-foreground text-background font-bold rounded-xl whitespace-nowrap shadow-xl hover:scale-105 transition-transform flex items-center gap-2">
+                            View Details <ArrowUpRight className="w-4 h-4" />
+                          </button>
                         </div>
-                      );
-                    })}
-                  </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+
+              {/* Event catalog grid */}
+              {eventsLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </div>
+              ) : !displayedEvents || displayedEvents.length === 0 ? (
+                <div className="text-center py-12 border border-border/50 rounded-2xl bg-white/[0.01]">
+                  <p className="text-sm text-muted-foreground">{showFavoritesOnly ? 'You have no favorited events.' : 'No events found matching your filter criteria.'}</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {displayedEvents.slice(1).map((event: any, idx: number) => {
+                    // Gradient fallback palettes per category
+                    const gradients: Record<string, string> = {
+                      Technical:  'linear-gradient(135deg, #818cf8 0%, #6366f1 100%)',
+                      Cultural:   'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)',
+                      Sports:     'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
+                      Workshop:   'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)',
+                    };
+                    const bg = gradients[event.category] || gradients['Technical'];
+
+                    return (
+                    <div
+                      key={event._id}
+                      onClick={() => setSelectedEvent(event)}
+                      className="group flex flex-col bg-card border border-border/60 hover:border-primary/40 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
+                    >
+                      {/* Poster Image or Top Accent Line */}
+                      {event.poster ? (
+                        <div className="w-full h-40 bg-muted overflow-hidden relative">
+                          <img src={event.poster} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          <div className="absolute top-0 inset-x-0 h-1.5" style={{ background: bg }} />
+                        </div>
+                      ) : (
+                        <div className="absolute top-0 inset-x-0 h-1.5 z-10" style={{ background: bg }} />
+                      )}
+
+                      {/* Card Body */}
+                      <div className="p-6 flex flex-col flex-1 bg-background relative pt-5">
+                        {/* Header: Badges & Favorite */}
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex flex-wrap gap-2">
+                            <span className="text-[10px] font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-md tracking-wide uppercase">{event.category}</span>
+                            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md tracking-wide uppercase ${
+                              event.difficultyLevel === 'Advanced' ? 'bg-red-500/10 text-red-500' : 
+                              event.difficultyLevel === 'Intermediate' ? 'bg-amber-500/10 text-amber-600' : 'bg-emerald-500/10 text-emerald-500'
+                            }`}>{event.difficultyLevel}</span>
+                          </div>
+                          
+                          <button
+                            type="button"
+                            onClick={(e) => toggleFavorite(event._id, e)}
+                            className="p-1.5 -mr-1.5 -mt-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-red-500 transition-colors z-20 clickable"
+                          >
+                            <Heart className={`w-5 h-5 ${favorites.includes(event._id) ? 'fill-red-500 text-red-500' : ''}`} />
+                          </button>
+                        </div>
+                        {/* Date and Venue Row */}
+                        <div className="flex justify-between items-center text-xs text-muted-foreground mb-3 font-medium">
+                          <span className="flex items-center gap-1.5 text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">
+                            <Clock className="w-3.5 h-3.5" /> {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </span>
+                          <span className="flex items-center gap-1.5 truncate max-w-[50%]">
+                            <MapPin className="w-3.5 h-3.5 shrink-0" /> <span className="truncate">{event.venue}</span>
+                          </span>
+                        </div>
+
+                        {/* Title and Desc */}
+                        <h4 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{event.title}</h4>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mt-2 flex-1">{event.description}</p>
+                        
+                        {/* Divider */}
+                        <div className="w-full h-px bg-border/60 my-4" />
+
+                        {/* Footer: Seats and Action */}
+                        <div className="flex justify-between items-center">
+                          <div className="flex flex-col">
+                            <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">Availability</span>
+                            {event.isRegistrationOpen === false ? (
+                              <span className="text-red-500 font-bold text-sm">Closed</span>
+                            ) : (
+                              <span className="text-emerald-500 font-bold text-sm flex items-center gap-1.5">
+                                Open <span className="text-xs text-muted-foreground font-semibold bg-muted px-1.5 py-0.5 rounded">({event.availableSeats} left)</span>
+                              </span>
+                            )}
+                          </div>
+
+                          {event.isRegistrationOpen !== false && (
+                            <span className="bg-foreground text-background group-hover:bg-primary group-hover:text-primary-foreground px-4 py-2 rounded-xl text-sm font-bold shadow-md transition-all flex items-center gap-1.5">
+                              Book Pass <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    );
+                  })}
+                </div>
 
               )}
             </div>
@@ -1019,7 +1121,39 @@ export const StudentDashboard: React.FC = () => {
                            <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex-shrink-0 flex items-center justify-center border border-emerald-500/20 text-emerald-500 hidden sm:flex">
                              <Award className="w-5 h-5" />
                            </div>
-          {/* TAB 4: LEADERBOARD */}
+                           <div className="flex-1 min-w-0">
+                             <h4 className="text-base md:text-xl font-bold text-foreground leading-tight truncate">{reg.eventId?.title}</h4>
+                             <span className="text-xs text-muted-foreground mt-0.5 block">Verified on: {new Date(reg.attendedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                           </div>
+                        </div>
+                        
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400 mt-2 md:mt-1 block px-3 py-1 bg-emerald-500/10 w-fit rounded-lg border border-emerald-500/20 sm:ml-13">
+                          Status: Verified Attendee
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3 w-full md:w-auto shrink-0 pt-4 border-t border-border/50 md:border-0 md:pt-0">
+                        <button
+                          onClick={() => setViewCertificateReg(reg)}
+                          className="flex-1 md:flex-none py-2 px-4 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl transition clickable flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider border border-primary/20"
+                        >
+                          <Eye className="w-4 h-4" /> <span className="sm:inline">View</span>
+                        </button>
+                        <a
+                          href={`http://localhost:5000/api/registrations/${reg._id}/certificate`}
+                          className="flex-1 md:flex-none py-2 px-4 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-xl transition clickable flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider border border-emerald-500/20"
+                          title="Download Certificate PDF"
+                        >
+                          <Download className="w-4 h-4" /> <span className="md:hidden">Download</span>
+                        </a>
+                      </div>
+                    </SpotlightCard>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 5: LEADERBOARD */}
           {activeTab === 'leaderboard' && (() => {
             const eventsWithWinners = (displayedEvents || [])
               .filter((e: any) => e.winners && e.winners.length > 0)
@@ -1127,7 +1261,7 @@ export const StudentDashboard: React.FC = () => {
             );
           })()}
 
-          {/* TAB 5: CALENDAR VIEW */}
+          {/* TAB 6: CALENDAR VIEW */}
           {activeTab === 'calendar' && (() => {
             const currentYear = new Date().getFullYear();
             const currentMonth = new Date().getMonth(); 
@@ -1242,7 +1376,7 @@ export const StudentDashboard: React.FC = () => {
             );
           })()}
 
-          {/* TAB 6: EDIT PROFILE */}
+          {/* TAB 7: EDIT PROFILE */}
           {activeTab === 'profile' && (
             <div className="max-w-3xl mx-auto space-y-6">
               {/* Header Card */}
@@ -1419,7 +1553,7 @@ export const StudentDashboard: React.FC = () => {
                   </div>
 
                   <div className="pt-6 mt-6 border-t border-border/50 flex flex-col sm:flex-row justify-between items-center gap-4">
-
+                    <p className="text-xs text-muted-foreground">Make sure all details are accurate for certificates.</p>
                     <button
                       type="submit"
                       disabled={isSavingProfile}
@@ -1454,7 +1588,7 @@ export const StudentDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 7: SUPPORT & HELP */}
+          {/* TAB 8: SUPPORT & HELP */}
           {activeTab === 'support' && (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center gap-4 mb-8">
@@ -1540,8 +1674,8 @@ export const StudentDashboard: React.FC = () => {
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         </div>
                         <div>
-                          <h4 className="font-bold text-sm text-foreground">Check-in Issues</h4>
-                          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed font-medium">If your attendance was not captured during the event, please submit a ticket with your Registration ID and the Event Name.</p>
+                          <h4 className="font-bold text-sm text-foreground">Missing Certificates</h4>
+                          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed font-medium">Certificates are issued only to students whose attendance was successfully verified by the scanner during the event.</p>
                         </div>
                       </div>
                     </div>
@@ -1842,11 +1976,138 @@ export const StudentDashboard: React.FC = () => {
         </div>
       )}
 
+      {/* CERTIFICATE VIEWER MODAL */}
+      {viewCertificateReg && (() => {
+        const today = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+        
+        // Determine if user is a winner for this event
+        let isWinner = false;
+        let place = '';
+        if (viewCertificateReg.eventId?.winners?.length > 0) {
+          const normalize = (str: string | undefined) => str?.toString().toLowerCase().trim() || '';
+          const sUser = normalize(user?.username);
+          const sReg = normalize(user?.registrationNumber);
+          
+          const winnerMatch = viewCertificateReg.eventId.winners.find((w: any) => {
+            const wUser = normalize(w.username);
+            const wReg = normalize(w.regNo);
+            
+            return (wUser && wUser === sUser) || 
+                   (wReg && wReg === sReg) || 
+                   (wReg && wReg === sUser) || 
+                   (wUser && wUser === sReg);
+          });
+          
+          if (winnerMatch) {
+            isWinner = true;
+            place = winnerMatch.place;
+          }
+        }
+
+        return (
+          <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center z-[9999] p-4 sm:p-6 md:p-12 overflow-y-auto" onClick={() => setViewCertificateReg(null)}>
+            <div className="w-full max-w-3xl my-auto flex flex-col" onClick={(e) => e.stopPropagation()}>
+              {/* Actions bar */}
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-white/70 text-sm font-medium">Certificate Preview</p>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`http://localhost:5000/api/registrations/${viewCertificateReg._id}/certificate`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-bold rounded-xl hover:bg-primary/90 transition"
+                  >
+                    <Download className="w-4 h-4" /> Download PDF
+                  </a>
+                  <button onClick={() => setViewCertificateReg(null)} className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Certificate Visual */}
+              <div
                 className="bg-white border-[6px] md:border-[12px] border-slate-900 rounded-lg p-6 md:p-12 relative overflow-hidden font-serif shadow-2xl"
               >
                 {/* Inner border */}
                 <div className="absolute inset-1.5 md:inset-2 border-2 border-slate-200 rounded pointer-events-none" />
                 
+                {/* Decorative corner accents (gold/bronze) */}
+                <div className="absolute top-2 md:top-4 left-2 md:left-4 w-5 h-5 md:w-8 md:h-8 border-t-2 border-l-2 border-amber-700" />
+                <div className="absolute top-2 md:top-4 right-2 md:right-4 w-5 h-5 md:w-8 md:h-8 border-t-2 border-r-2 border-amber-700" />
+                <div className="absolute bottom-2 md:bottom-4 left-2 md:left-4 w-5 h-5 md:w-8 md:h-8 border-b-2 border-l-2 border-amber-700" />
+                <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4 w-5 h-5 md:w-8 md:h-8 border-b-2 border-r-2 border-amber-700" />
+
+                {/* Subtle background watermark */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] text-7xl md:text-[160px] font-black text-slate-900 -tracking-tighter pointer-events-none select-none">Information Technology</div>
+
+                <div className="text-center relative z-10">
+                  {/* College name */}
+                  <div className="flex items-center justify-center gap-2 md:gap-3 mb-3 md:mb-5">
+                    <img src="/gtec_logo.png" alt="GTEC" className="w-8 h-8 md:w-11 md:h-11 object-contain" />
+                    <h2 className="text-slate-900 text-[11px] md:text-base font-sans font-extrabold tracking-wider uppercase m-0">
+                      Ganadipathy Tulsi's Jain Engineering College
+                    </h2>
+                  </div>
+
+                  {/* Title */}
+                  <h1 className="text-amber-700 text-lg md:text-3xl tracking-widest uppercase font-serif font-bold my-4 md:my-6">
+                    {isWinner ? "Certificate of Merit" : "Certificate of Participation"}
+                  </h1>
+
+                  {/* This certifies */}
+                  <p className="text-slate-600 text-[10px] md:text-sm italic mb-3 md:mb-5 font-serif">
+                    This is to proudly certify that
+                  </p>
+
+                  {/* Student Name */}
+                  <h2 className="text-slate-900 text-2xl md:text-4xl font-bold mb-3 md:mb-6 tracking-wide font-sans">
+                    {user?.name || 'Student Name'}
+                  </h2>
+
+                  <p className="text-slate-600 text-[10px] md:text-sm italic mb-2 font-serif px-4">
+                    has successfully participated {isWinner ? `and secured ${place} Place` : ''} in the event
+                  </p>
+
+                  {/* Event Name */}
+                  <h3 className="text-slate-900 text-sm md:text-2xl font-bold mb-3 md:mb-4 font-sans">
+                    "{viewCertificateReg.eventId?.title || 'Event Name'}"
+                  </h3>
+                  
+                  {/* Simplified details */}
+                  <p className="text-slate-500 text-[9px] md:text-sm font-sans mb-6 md:mb-10 font-medium">
+                    Held on {new Date(viewCertificateReg.eventId?.date || new Date()).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+
+                  {/* Footer */}
+                  <div className="flex justify-between items-end mt-6 md:mt-10 px-2 md:px-5">
+                    <div className="text-center">
+                      <div className="h-4 md:h-7 mb-1" />
+                      <div className="w-16 md:w-32 h-[1px] bg-slate-300 mb-1 md:mb-2 mx-auto" />
+                      <p className="text-slate-500 text-[6px] md:text-[10px] font-bold uppercase font-sans">HOD Information Technology</p>
+                    </div>
+                    
+                    {/* Golden seal */}
+                    <div className="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-amber-300 to-amber-700 rounded-full flex items-center justify-center shadow-lg mx-2 shrink-0">
+                      <div className="w-8 h-8 md:w-[52px] md:h-[52px] border border-dashed border-white/60 rounded-full flex items-center justify-center">
+                        <Award className="w-4 h-4 md:w-6 md:h-6 text-white" />
+                      </div>
+                    </div>
+
+                    <div className="text-center">
+                      <div className="h-4 md:h-7 flex items-end justify-center mb-1">
+                         <span className="font-serif italic text-sm md:text-2xl text-slate-900 -rotate-6 opacity-80">Verified</span>
+                      </div>
+                      <div className="w-16 md:w-32 h-[1px] bg-slate-300 mb-1 md:mb-2 mx-auto" />
+                      <p className="text-slate-500 text-[6px] md:text-[10px] font-bold uppercase font-sans">Principal</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* FULLSCREEN POSTER VIEWER MODAL */}
       {viewPosterUrl && (

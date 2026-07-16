@@ -30,13 +30,15 @@ export const getEvents = async (req: Request, res: Response) => {
       // Filter by publishing status
       if (status === 'published') {
         query.isPublished = true;
-        query.isArchived = false;
-        query.isCompleted = false;
+        query.isArchived = { $ne: true };
+        if (req.query.excludeCompleted === 'true') {
+          query.isCompleted = { $ne: true };
+        }
       } else if (status === 'archived') {
         query.isArchived = true;
       } else if (status === 'draft') {
         query.isPublished = false;
-        query.isArchived = false;
+        query.isArchived = { $ne: true };
       }
 
       // Search keyword (title, description, category, venue)

@@ -68,7 +68,7 @@ export const LandingPage: React.FC = () => {
   const { data: eventsData, isLoading } = useQuery({
     queryKey: ['landing-events'],
     queryFn: async () => {
-      const res = await api.get('/events?status=published');
+      const res = await api.get('/events?status=published&excludeCompleted=true');
       return res.data.data;
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes to improve load time
